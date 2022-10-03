@@ -233,11 +233,15 @@ namespace Lab1
 			LU lu = new LU(A, B, n, ioModule);*/
 
             SSRM ssrm_eval = new SSRM(A, B);
-            ioModule.WriteLine($"{ssrm_eval.Answer.ToString()}");
+			ioModule.WriteLine($"{ssrm_eval.Matrix_G.ToString()}");
+			ioModule.SeparateText();
+			ioModule.WriteLine($"{ssrm_eval.Matrix_G.Inverse.ToString()}");
+			ioModule.SeparateText();
+			ioModule.WriteLine($"{ssrm_eval.Answer.ToString()}");
             ioModule.SeparateText();
             ioModule.WriteLine($"{(A.Inverse * B).ToString()}");
-            
-            /*//Нахождение вектора X
+
+			/*//Нахождение вектора X
 			Vector _X = lu.Answer();
             //Проверка
 			Matrix X_diff = (lu.L * lu.U) - lu.A;
