@@ -50,6 +50,7 @@
     <Compile Include="Matrices\Vector.cs" />
     <Compile Include="Methods\LU.cs" />
     <Compile Include="Methods\Method.cs" />
+    <Compile Include="Methods\SSRM.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

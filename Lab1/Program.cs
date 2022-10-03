@@ -1,6 +1,7 @@
 ﻿using System;
 using Matrices;
 using Vectors;
+using Methods;
 using System.Runtime.InteropServices;
 
 namespace Lab1
@@ -207,19 +208,19 @@ namespace Lab1
             ioModule.GetSize(out n);
 
             Matrix A = new Matrix(n, n);
-            Vector B;
-			Vector X = new Vector(n);
+            Vector B = new Vector(n);
+			//Vector X = new Vector(n);
 
-            ioModule.GetInfo(A, X);
+            ioModule.GetInfo(A, B);
 
             //Вычисление правого вектора
-            B = A * X;
+            //B = A * X;
 
             ioModule.TerminateExcel();
 
             ioModule.FileOpen();
 
-            ioModule.WriteLine("INPUT");
+            /*ioModule.WriteLine("INPUT");
             ioModule.WriteLine("X=");
             ioModule.WriteLine(X.ToString(), 1);
 			ioModule.WriteLine("A=");
@@ -229,9 +230,14 @@ namespace Lab1
             ioModule.SeparateText();
 
             //LUP-разложение
-			LU lu = new LU(A, B, n, ioModule);
+			LU lu = new LU(A, B, n, ioModule);*/
 
-            //Нахождение вектора X
+            SSRM ssrm_eval = new SSRM(A, B);
+            ioModule.WriteLine($"{ssrm_eval.Answer.ToString()}");
+            ioModule.SeparateText();
+            ioModule.WriteLine($"{(A.Inverse * B).ToString()}");
+            
+            /*//Нахождение вектора X
 			Vector _X = lu.Answer();
             //Проверка
 			Matrix X_diff = (lu.L * lu.U) - lu.A;
@@ -273,7 +279,7 @@ namespace Lab1
             ioModule.WriteLine("A * X - B =");
 			ioModule.WriteLine(B_diff.ToString(), 1);
             ioModule.WriteLine("Error = ");
-			ioModule.WriteLine((X - _X).ToString(), 1);
+			ioModule.WriteLine((X - _X).ToString(), 1);*/
 
 			ioModule.FileClose();
 
