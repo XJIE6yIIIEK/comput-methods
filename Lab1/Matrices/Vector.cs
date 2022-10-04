@@ -17,11 +17,6 @@ namespace Vectors {
 			get { return length; }
 		}
 
-		public double Norm // энергитическая норма вектора
-        {
-			get { return this.NormE(); }
-        }
-
 		public double this[int i] {
 			get {
 				if(i >= length || i < 0) {
@@ -49,13 +44,6 @@ namespace Vectors {
 			}
 		}
 
-		public double NormE()
-        {
-			double sum = 0;
-			for (int i = 0; i < this.length; i++)
-				sum += this[i] * this[i];
-			return Math.Sqrt(sum);
-        }
 		public Vector FastSwap(int[] swapIndexes) {
 			Vector res = new Vector(length);
 
