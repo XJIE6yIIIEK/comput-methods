@@ -17,6 +17,8 @@ namespace Methods {
 		}
 
 		public SIM(Matrix A, Vector B, double eps, IOModule io) {
+			this.io = io;
+
 			Vector X_Prev = new Vector(B.Length);
 			Vector X_Curr = new Vector(B.Length);
 
@@ -25,13 +27,28 @@ namespace Methods {
 
 			int iter = 0;
 
-			this.io = io;
-
 			X_Prev.Fill(1);
 
 			do {
+				Tuple<Vector, double, double> res = SIMStep(A, B, X_Curr, X_Prev, tau);
+				Vector X = res.Item1;
+				double q = res.Item2;
+				double residualNorm = res.Item3;
 
+				Vector diff = X - X_Curr;
+				double criterionCurr = q * diff.EnergyNorm(A) / (1 - q);
+
+				X_Prev = X_Curr;
+				X_Curr = X;
+
+				stopCriterion = residualNorm;
+
+				WriteStep(iter, tau, q, residualNorm, criterionCurr, X);
+
+				iter++;
 			} while(stopCriterion > eps);
+
+			this.X = X_Curr;
 		}
 
 		private Tuple<Vector, double, double> SIMStep(Matrix A, Vector B, Vector X_Curr, Vector X_Prev, double tau) {
@@ -50,10 +67,21 @@ namespace Methods {
 			Vector residual = A * X - B;
 			Vector Q_Numerator = X - X_Curr;
 			Vector Q_Denumerator = X_Curr - X_Prev;
-			double Q_NumEnergyNorm = Math.Sqrt(Vector.Dot(A * Q_Numerator, Q_Numerator));
-			double Q_DenumEnergyNorm = Math.Sqrt(Vector.Dot(A * Q_Denumerator, Q_Denumerator));
+
+			double Q_NumEnergyNorm = Q_Numerator.EnergyNorm(A);
+			double Q_DenumEnergyNorm = Q_Denumerator.EnergyNorm(A);
 			double q = Q_NumEnergyNorm / Q_DenumEnergyNorm;
-			double residualNorm = Math.Sqrt(Vector.Dot(A * residual, residual));
+
+			double residualNorm = residual.EnergyNorm(A);
+
+			return new Tuple<Vector, double, double>(X, q, residualNorm);
+		}
+
+		private void WriteStep(int iter, double tau, double q, double residualNorm, double criterionCurr, Vector X) {
+			string str = string.Format("| {0,5} | {1,12:0.0000E0;-0.0000E0;0} | {2,12:0.0000E0;-0.0000E0;0} | " +
+				"{3,12:0.0000E0;-0.0000E0;0} | {3,12:0.0000E0;-0.0000E0;0} | " + X.ToString(), iter, tau, q, residualNorm, criterionCurr);
+
+			io.WriteLine(str);
 		}
 	}
 }

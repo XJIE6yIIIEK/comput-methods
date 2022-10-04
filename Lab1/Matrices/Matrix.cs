@@ -25,10 +25,11 @@ namespace Matrices {
 		private protected int cols;			  //Столбцы
 		private protected MatrixType _type;     //Тип матрицы в LUP-разложении
 
-		private protected double? determinant;  //Определитель
-		private protected double? quadricNorm;  //Квадратичная норма
-		private protected double? octoNorm;	  //Октоэдрическая норма
-		private protected double? euclideNorm;  //Евклидова норма
+		private protected double? determinant;		//Определитель
+		private protected double? quadricNorm;		//Квадратичная норма
+		private protected double? octoNorm;			//Октоэдрическая норма
+		private protected double? euclideNorm;		//Евклидова норма
+		private protected double? euclideCondition; //Число обусловленности по евклидовой норме
 
 		public double this[int n, int m] {
 			get {
@@ -126,9 +127,31 @@ namespace Matrices {
 					return (double)euclideNorm;
 				}
 
-				euclideNorm = Norm3();
+				Tuple<double, double> res = Norm3();
+				euclideNorm = res.Item1;
+				euclideCondition = res.Item2;
 
 				return (double)euclideNorm;
+			}
+		}
+
+		/// <summary>
+		/// Евклидова норма матрицы. <i><b>Только для чтения</b></i>.
+		/// </summary>
+		/// <remarks>
+		/// <i>После первого вызова значение кэшируется.</i>
+		/// </remarks>
+		public double EuclideCondition {
+			get {
+				if(euclideCondition != null) {
+					return (double)euclideCondition;
+				}
+
+				Tuple<double, double> res = Norm3();
+				euclideNorm = res.Item1;
+				euclideCondition = res.Item2;
+
+				return (double)euclideCondition;
 			}
 		}
 
@@ -348,7 +371,7 @@ namespace Matrices {
 		/// Евклидова норма
 		/// </summary>
 		/// <returns>Значение нормы</returns>
-		private protected double Norm3() {
+		private protected Tuple<double, double> Norm3() {
 			double max = double.MinValue;
 			double min = double.MaxValue;
 
@@ -372,7 +395,11 @@ namespace Matrices {
 				}
 			}
 
-				return Math.Sqrt(max / min);
+			double condit = Math.Sqrt(max / min);
+			double norm = Math.Sqrt(max);
+
+
+			return new Tuple<double, double>(norm, condit);
 		}
 
 		/// <summary>
