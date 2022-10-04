@@ -11,6 +11,8 @@ namespace Vectors {
 
 		private protected int length;        //Длина вектора
 
+		private protected double? energyNorm;
+
 		public int Length {
 			get { return length; }
 		}
@@ -60,6 +62,29 @@ namespace Vectors {
 			res[l] = tmp;
 
 			return res;
+		}
+
+		public void Fill(double[] arr) {
+			for(int i = 0; i < length; i++) {
+				vector[i] = arr[i];
+			}
+		}
+
+		public void Fill(double num) {
+			for(int i = 0; i < length; i++) {
+				vector[i] = num;
+			}
+		}
+
+		public double EnergyNorm(Matrix A) {
+			if(this.energyNorm != null) {
+				return (double)this.energyNorm;
+			}
+
+			double energyNorm = Math.Sqrt(Dot(A * this, this));
+
+			this.energyNorm = energyNorm;
+			return energyNorm;
 		}
 
 		public object Clone() {
