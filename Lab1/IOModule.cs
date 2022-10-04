@@ -175,5 +175,13 @@ namespace Lab1 {
 			writer.WriteLine(sep);
 			Console.WriteLine(sep);
 		}
+
+		public string PrettyfyDouble(double num, int count) {
+			if(Math.Abs(num) > 0.0000001) {
+				return string.Format("{0," + count + ":0.000000;-0.000000;0}", num);
+			} else {
+				return string.Format("{0," + count + ":0.0000E0;-0.0000E0;0}", num);
+			}
+		}
 	}
 }

@@ -1,5 +1,5 @@
-﻿using Vectors;
-using Matrices;
+﻿using Matrices;
+using Vectors;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Lab1;
 
 namespace Methods {
-	internal class SIM {
+	internal class FGDM {
 		private Vector X;
 		private IOModule io;
 
@@ -16,24 +16,26 @@ namespace Methods {
 			get { return X; }
 		}
 
-		public SIM(Matrix A, Vector B, double eps, IOModule io) {
+		public FGDM(Matrix A, Vector B, double eps, IOModule io) {
 			this.io = io;
 
 			Vector X_Prev = new Vector(B.Length);
 			Vector X_Curr = new Vector(B.Length);
+			Vector residual = A * X_Curr - B;
 
 			double stopCriterion;
-			double tau = 0.9 * 2 / A.EuclideNorm;
 
 			int iter = 0;
 
-			X_Curr.Fill(new double[] { 1, 2, 3, 4 });
+			X_Curr.Fill(new double[] { 1, 2, 3, 4});
 
 			do {
-				Tuple<Vector, double, double> res = SIMStep(A, B, X_Curr, X_Prev, tau);
+				Tuple<Vector, Vector, double, double, double> res = FGDMStep(A, B, X_Curr, X_Prev, residual);
 				Vector X = res.Item1;
-				double q = res.Item2;
-				double residualNorm = res.Item3;
+				Vector residualCur = res.Item2;
+				double tau = res.Item3;
+				double q = res.Item4;
+				double residualNorm = res.Item5;
 
 				Vector diff = X - X_Curr;
 				double errNorm = diff.EnergyNorm(A);
@@ -42,6 +44,7 @@ namespace Methods {
 				X_Prev = X_Curr;
 				X_Curr = X;
 
+				residual = residualCur;
 				stopCriterion = residualNorm;
 
 
@@ -53,7 +56,10 @@ namespace Methods {
 			this.X = X_Curr;
 		}
 
-		private Tuple<Vector, double, double> SIMStep(Matrix A, Vector B, Vector X_Curr, Vector X_Prev, double tau) {
+		private Tuple<Vector, Vector, double, double, double> FGDMStep(Matrix A, Vector B, Vector X_Curr, Vector X_Prev, Vector residualPrev) {
+			Vector tmp = A * residualPrev;
+			double tau = Vector.Dot(residualPrev, residualPrev) / Vector.Dot(tmp, residualPrev);
+
 			Vector X = new Vector(B.Length);
 
 			for(int i = 0; i < A.Rows; i++) {
@@ -66,7 +72,7 @@ namespace Methods {
 				X[i] = X_Curr[i] + tau * (B[i] - sum);
 			}
 
-			Vector residual = A * X - B;
+			Vector residual = B - A * X;
 			Vector Q_Numerator = X - X_Curr;
 			Vector Q_Denumerator = X_Curr - X_Prev;
 
@@ -76,7 +82,7 @@ namespace Methods {
 
 			double residualNorm = residual.EnergyNorm(A);
 
-			return new Tuple<Vector, double, double>(X, q, residualNorm);
+			return new Tuple<Vector, Vector, double, double, double>(X, residual, tau, q, residualNorm);
 		}
 
 		private void WriteStep(int iter, double tau, double q, double residualNorm, double errNorm, double errAss, Vector X) {
