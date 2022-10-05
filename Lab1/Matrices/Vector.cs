@@ -165,6 +165,27 @@ namespace Vectors {
 			return res;
 		}
 
+		public static Vector operator *(double a, Vector b) {
+			Vector res = new Vector(b.Length);
+
+			for(int i = 0; i < res.length; i++) {
+				res[i] = a * b[i];
+            }
+
+			return res;
+		}
+
+		public static Vector operator *(Vector a, double b)
+		{
+			Vector res = new Vector(a.Length);
+
+			for (int i = 0; i < res.length; i++)
+			{
+				res[i] = a[i] * b;
+			}
+
+			return res;
+		}
 		public static Vector operator +(Vector a, Vector b) {
 			Vector res = new Vector(a.length);
 
