@@ -6,6 +6,11 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 
 namespace Lab1 {
+	enum InputType { 
+		Matrix = 1,
+		Vector = 2
+	}
+
 	/// <summary>
 	/// Контроллер ввода-вывода
 	/// </summary>
@@ -104,17 +109,14 @@ namespace Lab1 {
 			}
 		}
 
-		/// <summary>
-		/// Получение информации о матрицах
-		/// </summary>
-		/// <param name="a">Матрица A</param>
-		/// <param name="x">Вектор X</param>
-		public void GetInfo(Matrix a, Vector x) {
-			Excel.Worksheet AMatrixWorksheet = workbook.Worksheets["A"];
-			GetMatrix(a, AMatrixWorksheet);
+		public void GetMatrixInfo(Matrix A, string matrixName) {
+			Excel.Worksheet AMatrixWorksheet = workbook.Worksheets[matrixName];
+			GetMatrix(A, AMatrixWorksheet);
+		}
 
-			Excel.Worksheet XVectorWorksheet = workbook.Worksheets["X"];
-			GetVector(x, XVectorWorksheet);
+		public void GetVectorInfo(Vector A, string vectorName) {
+			Excel.Worksheet AVectorWorksheet = workbook.Worksheets[vectorName];
+			GetVector(A, AVectorWorksheet);
 		}
 
 		/// <summary>
@@ -122,9 +124,12 @@ namespace Lab1 {
 		/// </summary>
 		/// <param name="n">Ссылка на параметр размерности вводимых векторов и матриц</param>
 		public void GetSize(out int n) {
-			Excel.Worksheet worksheet = workbook.Worksheets["A"];
+			Excel.Worksheet worksheet = workbook.Worksheets["Options"];
 			Excel.Range lastCell = worksheet.Cells.SpecialCells(Excel.XlCellType.xlCellTypeLastCell, Type.Missing);
-			n = lastCell.Row;			
+			int lastRow = lastCell.Row;
+			Excel.Range settingsNameRange = worksheet.Range["A1", worksheet.Cells[lastRow, "A"]];
+
+			n = worksheet.Cells[settingsNameRange.Find("size").Row, "B"].Value2;
 		}
 
 		/// <summary>

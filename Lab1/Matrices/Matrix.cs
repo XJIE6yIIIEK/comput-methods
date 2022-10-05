@@ -502,6 +502,21 @@ namespace Matrices {
 		}
 
 		/// <summary>
+		/// Инициализация матрицы, как единичной.
+		/// </summary>
+		public void InitializeE() {
+			for(int i = 0; i < rows; i++) {
+				for(int j = 0; j < cols; j++) {
+					if(i == j) {
+						matrix[i, j] = 1;
+					} else {
+						matrix[i, j] = 0;
+					}
+				}
+			}
+		}
+
+		/// <summary>
 		/// Вычисление определителя методом разложения строки.
 		/// </summary>
 		/// <returns>Определитель матрицы</returns>
