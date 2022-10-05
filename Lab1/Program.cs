@@ -232,14 +232,8 @@ namespace Lab1
             //LUP-разложение
 			LU lu = new LU(A, B, n, ioModule);*/
 
-            SSRM ssrm_eval = new SSRM(A, B);
-			ioModule.WriteLine($"{ssrm_eval.Matrix_G.ToString()}");
-			ioModule.SeparateText();
-			ioModule.WriteLine($"{ssrm_eval.Matrix_G.Inverse.ToString()}");
-			ioModule.SeparateText();
-			ioModule.WriteLine($"{ssrm_eval.Answer.ToString()}");
-            ioModule.SeparateText();
-            ioModule.WriteLine($"{(A.Inverse * B).ToString()}");
+            SIM sim = new SIM(A, B, 0.0001, ioModule);
+            FGDM fgdm = new FGDM(A, B, 0.0001, ioModule);
 
 			/*//Нахождение вектора X
 			Vector _X = lu.Answer();
