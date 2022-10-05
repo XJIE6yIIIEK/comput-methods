@@ -48,8 +48,12 @@
     <Compile Include="Matrices\Matrix.cs" />
     <Compile Include="Matrices\U.cs" />
     <Compile Include="Matrices\Vector.cs" />
+    <Compile Include="Methods\CGM.cs" />
+    <Compile Include="Methods\FGDM.cs" />
     <Compile Include="Methods\LU.cs" />
     <Compile Include="Methods\Method.cs" />
+    <Compile Include="Methods\SIM.cs" />
+    <Compile Include="Methods\SOR.cs" />
     <Compile Include="Methods\SSRM.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
