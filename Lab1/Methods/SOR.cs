@@ -1,6 +1,7 @@
 ﻿using System;
 using Vectors;
 using Matrices;
+using Lab1;
 
 namespace Methods
 {
@@ -8,10 +9,7 @@ namespace Methods
 	internal class SOR
 	{
 		private Vector X;
-		//private Matrix D;
-		//private Matrix A1;
-		//public Matrix A2;
-
+		IOModule io;
 		public Vector Answer
 		{
 			get { return X; }
@@ -20,12 +18,14 @@ namespace Methods
 		public int SOR_Iteration(double w, Vector X, Vector startVector, Matrix A, Vector B, double eps, bool output)
 		{
 			int iter = 0;
+			double residualNorm;
 			Vector Z = new Vector(startVector.Length);
 			Vector newX = new Vector(startVector.Length);
 			Z = (Vector)startVector.Clone();
 			newX = (Vector)startVector.Clone();
 			while ((X - newX).EnergyNorm(A) >= eps)
 			{
+				residualNorm = (B - A * newX).EnergyNorm(A);
 				iter++;
 				double sumNew = 0;
 				double sumOld = 0;
@@ -42,35 +42,23 @@ namespace Methods
 					newX[i] = newX[i] + w * (Z[i] - newX[i]);
 				}
 
-				if(output)
-					Console.WriteLine(iter + "  " + newX.ToString());
+				if (output)
+					this.WriteStep(iter, w, residualNorm, (X - newX).EnergyNorm(A), newX);
 			}
 			this.X = (Vector)newX.Clone();
 			return iter;
 		}
 
-		public SOR(Matrix A, Vector B, Vector X)
+		public SOR(Matrix A, Vector B, Vector X, IOModule io)
 		{
-			//D = new Matrix(A.Rows, A.Cols);
-			//A1 = new Matrix(A.Rows, A.Cols);
-			//A2 = new Matrix(A.Rows, A.Cols);
-
-			//for (int i = 0; i < A.Rows; i++)
-			//	for (int j = 0; j < A.Cols; j++)
-			//	{
-			//		if (i > j)
-			//			A1[i, j] = A[i, j];
-			//		if (i < j)
-			//			A2[i, j] = A[i, j];
-			//		if (i == j)
-			//			D[i, j] = A[i, j];
-			//	}
+			this.io = io;
 
 			int min = int.MaxValue;
 			double w0 = 0;
 			for (double i = 0.1; i <= 1.9; i += 0.1)
 			{
 				int cur = this.SOR_Iteration(i, X, B, A, B, 1E-2, false);
+				this.WriteStep(i, cur);
 				if (cur < min)
 				{
 					min = cur;
@@ -80,6 +68,25 @@ namespace Methods
 
 			 SOR_Iteration(w0, X, B, A, B, 1E-4, true);
 
+		}
+
+		private void WriteStep(double w, int iter) {
+			string iterStr = string.Format("{0,5}", iter);
+			string wIter = io.PrettyfyDouble(w, 12);
+
+			string str = $"| {wIter} | {iterStr}  ";
+
+			io.WriteLine(str);
+		}
+		private void WriteStep(int iter, double w, double residualNorm, double errNorm, Vector X) {
+			string iterStr = string.Format("{0,5}", iter);
+			string wIter = io.PrettyfyDouble(w, 12);
+			string residualNormStr = io.PrettyfyDouble(residualNorm, 12);
+			string errNormStr = io.PrettyfyDouble(errNorm, 12);
+
+			string str = $"| {iterStr} | {wIter} | {residualNormStr} | {errNormStr} | {X.ToString()}";
+
+			io.WriteLine(str);
 		}
 
 	}
