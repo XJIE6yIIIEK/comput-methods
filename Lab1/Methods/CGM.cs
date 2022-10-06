@@ -5,10 +5,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Lab1;
 
 namespace Methods{
     internal class CGM{
         private Vector X;
+        private IOModule io;
         
         public Vector Answer {
             get { return X; }
@@ -25,8 +27,14 @@ namespace Methods{
             double res = 1 - tau1 / tau / a * Vector.Dot(R1, R1) / Vector.Dot(R, R);
             return 1 / res;
         }
-        public CGM(Matrix A, Vector B, Vector X, Vector startVector, double eps) {
+        public CGM(Matrix A, Vector B, Vector X, double eps, IOModule io) {
+            this.io = io;
+
+            int iter = 1;
             double a = 1;
+
+            Vector startVector = (Vector)B.Clone();
+
             Vector R = getR(A, B, startVector);
             Vector RPrev;
             Vector curX = (Vector)startVector.Clone();
@@ -34,17 +42,27 @@ namespace Methods{
             Vector newX = new Vector(X.Length);
             double tau = getTau(A, R);
             double tauPrev;
+            double residualNorm = (B - A * curX).EnergyNorm(A);
+
 
             curX = a * curX - tau * a * R;
+            this.WriteStep(iter, tau, residualNorm, (X - curX).EnergyNorm(A), curX, a);
+
             tauPrev = tau;
             RPrev = (Vector)R.Clone();
 
             while ((X - curX).EnergyNorm(A) >= eps) {
+                iter++;
+
+                residualNorm = (B - A * curX).EnergyNorm(A);
+
                 R = getR(A, B, curX);
                 tau = getTau(A, R);
                 a = getA(tau, tauPrev, R, RPrev, a);
 
                 newX = a * curX + (1 - a) * prevX - tau * a * R;
+
+                this.WriteStep(iter, tau, residualNorm, (X - newX).EnergyNorm(A), newX, a);
 
                 tauPrev = tau;
                 RPrev = R;
@@ -55,6 +73,18 @@ namespace Methods{
             }
 
             this.X = (Vector)curX.Clone();
+        }
+        private void WriteStep(int iter, double tau, double residualNorm, double errNorm, Vector X, double alpha)
+        {
+            string iterStr = string.Format("{0,5}", iter);
+            string tauIter = io.PrettyfyDouble(tau, 12);
+            string residualNormStr = io.PrettyfyDouble(residualNorm, 12);
+            string errNormStr = io.PrettyfyDouble(errNorm, 12);
+            string a = io.PrettyfyDouble(alpha, 12);
+
+            string str = $"| {iterStr} | {tauIter} | {residualNormStr} | {errNormStr} | {X.ToString()} | {a}";
+
+            io.WriteLine(str);
         }
     }
 }
