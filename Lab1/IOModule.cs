@@ -129,7 +129,7 @@ namespace Lab1 {
 			int lastRow = lastCell.Row;
 			Excel.Range settingsNameRange = worksheet.Range["A1", worksheet.Cells[lastRow, "A"]];
 
-			n = worksheet.Cells[settingsNameRange.Find("size").Row, "B"].Value2;
+			n = (int)worksheet.Cells[settingsNameRange.Find("size").Row, "B"].Value2;
 		}
 
 		/// <summary>
@@ -187,6 +187,17 @@ namespace Lab1 {
 			} else {
 				return string.Format("{0," + count + ":0.0000E0;-0.0000E0;0}", num);
 			}
+		}
+
+		public string CenterString(string str, int width) {
+			if(str.Length >= width) {
+				return str;
+			}
+
+			int leftPadding = (width - str.Length) / 2;
+			int rightPadding = width - str.Length - leftPadding;
+
+			return new string(' ', leftPadding) + str + new string(' ', rightPadding);
 		}
 	}
 }

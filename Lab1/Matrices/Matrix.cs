@@ -1,5 +1,4 @@
 ﻿using System;
-using Vectors;
 
 namespace Matrices {
 	enum MatrixType {
@@ -13,17 +12,17 @@ namespace Matrices {
 	/// Матричный класс
 	/// </summary>
 	internal class Matrix {
-		private protected double[,] matrix;	  //Матрица значений
+		private protected double[,] matrix;			//Матрица значений
 
-		private protected Matrix t;			  //Матрицы поворота
-		private protected Matrix tt;			  //Транспонированная матрица поворота
-		public Matrix selfVals;		  //Матрица собственных векторов
+		private protected Matrix t;					//Матрицы поворота
+		private protected Matrix tt;				//Транспонированная матрица поворота
+		public Matrix selfVals;						//Матрица собственных векторов
 
-		private protected Matrix inverseMatrix; //Обратная матрица
+		private protected Matrix inverseMatrix;		//Обратная матрица
 
-		private protected int rows;			  //Строки
-		private protected int cols;			  //Столбцы
-		private protected MatrixType _type;     //Тип матрицы в LUP-разложении
+		private protected int rows;					//Строки
+		private protected int cols;					//Столбцы
+		private protected MatrixType _type;			//Тип матрицы в LUP-разложении
 
 		private protected double? determinant;		//Определитель
 		private protected double? quadricNorm;		//Квадратичная норма
@@ -136,7 +135,7 @@ namespace Matrices {
 		}
 
 		/// <summary>
-		/// Евклидова норма матрицы. <i><b>Только для чтения</b></i>.
+		/// Евклидово число обусловленности матрицы. <i><b>Только для чтения</b></i>.
 		/// </summary>
 		/// <remarks>
 		/// <i>После первого вызова значение кэшируется.</i>

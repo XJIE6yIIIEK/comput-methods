@@ -9,21 +9,43 @@ using Lab1;
 
 namespace Methods {
 	internal class FGDM {
-		private Vector X;
-		private IOModule io;
+		private Vector X;           //Вычисленный вектор X
+		private IOModule io;        //Модуль IO
 
+		private int theoretical;    //Теоретическое количество итераций
+
+		/// <summary>
+		/// Значение теоретического количества итераций
+		/// </summary>
+		public int Theoretical {
+			get { return theoretical; }
+		}
+
+		/// <summary>
+		/// Значение переменных X
+		/// </summary>
 		public Vector Answer {
 			get { return X; }
 		}
 
+		/// <summary>
+		/// Конструктор метода
+		/// </summary>
+		/// <param name="A">Матрица A</param>
+		/// <param name="B">Матрица B</param>
+		/// <param name="eps">Точность</param>
+		/// <param name="io">Модуль IO</param>
 		public FGDM(Matrix A, Vector B, double eps, IOModule io) {
 			this.io = io;
+
+			WriteHead(B.Length);
 
 			Vector X_Prev = new Vector(B.Length);
 			Vector X_Curr = new Vector(B.Length);
 			Vector residual = A * X_Curr - B;
 
 			double stopCriterion;
+			theoretical = (int)(A.EuclideCondition * Math.Log(1 / eps) / 2);
 
 			int iter = 0;
 
@@ -56,21 +78,20 @@ namespace Methods {
 			this.X = X_Curr;
 		}
 
+		/// <summary>
+		/// Итерационный шаг
+		/// </summary>
+		/// <param name="A">Матрица A</param>
+		/// <param name="B">Матрица B</param>
+		/// <param name="X_Curr">X(k)</param>
+		/// <param name="X_Prev">X(k-1)</param>
+		/// <param name="residualPrev">Вектор невязки на предыдущем шаге</param>
+		/// <returns>(Вектор X(k+1), Вектор невязки, Тау, Q, Норма невязки)</returns>
 		private Tuple<Vector, Vector, double, double, double> FGDMStep(Matrix A, Vector B, Vector X_Curr, Vector X_Prev, Vector residualPrev) {
 			Vector tmp = A * residualPrev;
 			double tau = Vector.Dot(residualPrev, residualPrev) / Vector.Dot(tmp, residualPrev);
 
-			Vector X = new Vector(B.Length);
-
-			for(int i = 0; i < A.Rows; i++) {
-				double sum = 0;
-
-				for(int j = 0; j < A.Cols; j++) {
-					sum += A[i, j] * X_Curr[j];
-				}
-
-				X[i] = X_Curr[i] + tau * (B[i] - sum);
-			}
+			Vector X = X_Curr + tau * (B - A * X_Curr);
 
 			Vector residual = B - A * X;
 			Vector Q_Numerator = X - X_Curr;
@@ -86,7 +107,7 @@ namespace Methods {
 		}
 
 		private void WriteStep(int iter, double tau, double q, double residualNorm, double errNorm, double errAss, Vector X) {
-			string iterStr = string.Format("{0,5}", iter);
+			string iterStr = string.Format("{0,5}", iter + 1);
 			string tauStr = io.PrettyfyDouble(tau, 12);
 			string qStr = io.PrettyfyDouble(q, 12);
 			string residualNormStr = io.PrettyfyDouble(residualNorm, 12);
@@ -96,6 +117,25 @@ namespace Methods {
 			string str = $"| {iterStr} | {tauStr} | {qStr} | {residualNormStr} | {errNormStr} | {errAssStr} | {X.ToString()}";
 
 			io.WriteLine(str);
+		}
+
+		private void WriteHead(int count) {
+			string centeredIter = io.CenterString("Iter", 7);
+			string centeredTau = io.CenterString("Tau", 14);
+			string centeredQ = io.CenterString("Q", 14);
+			string centeredResNorm = io.CenterString("Residual norm", 14);
+			string centeredErrNorm = io.CenterString("Error norm", 14);
+			string centeredErrEst = io.CenterString("Error estimate", 14);
+
+			string x = " ";
+			for(int i = 0; i < count; i++) {
+				string centeredX = io.CenterString($"X[{i + 1}]", 14);
+				x = x + centeredX;
+			}
+
+			string head = $"|{centeredIter}|{centeredTau}|{centeredQ}|{centeredResNorm}|{centeredErrNorm}|{centeredErrEst}|{x}";
+
+			io.WriteLine(head);
 		}
 	}
 }

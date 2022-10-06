@@ -8,8 +8,21 @@ namespace Methods
 
 	internal class SOR
 	{
-		private Vector X;
-		IOModule io;
+		private Vector X;           //Вычисленный вектор X
+		IOModule io;                //Модуль IO
+
+		private int theoretical;    //Теоретическое количество итераций
+
+		/// <summary>
+		/// Значение теоретического количества итераций
+		/// </summary>
+		public int Theoretical {
+			get { return theoretical; }
+		}
+
+		/// <summary>
+		/// Значение переменных X
+		/// </summary>
 		public Vector Answer
 		{
 			get { return X; }
@@ -53,8 +66,13 @@ namespace Methods
 		{
 			this.io = io;
 
+			double eps = 1E-4;
+
+			theoretical = (int)(Math.Sqrt(A.EuclideCondition) * Math.Log(1 / eps) / 4);
+
 			int min = int.MaxValue;
 			double w0 = 0;
+
 			for (double i = 0.1; i <= 1.9; i += 0.1)
 			{
 				int cur = this.SOR_Iteration(i, X, B, A, B, 1E-2, false);
@@ -66,8 +84,9 @@ namespace Methods
 				}
 			}
 
-			 SOR_Iteration(w0, X, B, A, B, 1E-4, true);
+			io.WriteLine($"w* = {io.PrettyfyDouble(w0, 6)}; ItrMin = {min}");
 
+			SOR_Iteration(w0, X, B, A, B, eps, true);
 		}
 
 		private void WriteStep(double w, int iter) {
@@ -78,6 +97,16 @@ namespace Methods
 
 			io.WriteLine(str);
 		}
+
+		private void WriteHeadW(int count) {
+			string centeredIter = io.CenterString("Iter", 7);
+			string centeredW = io.CenterString("w", 14);
+
+			string head = $"|{centeredW}|{centeredIter}";
+
+			io.WriteLine(head);
+		}
+
 		private void WriteStep(int iter, double w, double residualNorm, double errNorm, Vector X) {
 			string iterStr = string.Format("{0,5}", iter);
 			string wIter = io.PrettyfyDouble(w, 12);
@@ -89,5 +118,21 @@ namespace Methods
 			io.WriteLine(str);
 		}
 
+		private void WriteHead(int count) {
+			string centeredIter = io.CenterString("Iter", 7);
+			string centeredW = io.CenterString("w", 14);
+			string centeredResNorm = io.CenterString("Residual norm", 14);
+			string centeredErrNorm = io.CenterString("Error norm", 14);
+
+			string x = " ";
+			for(int i = 0; i < count; i++) {
+				string centeredX = io.CenterString($"X[{i + 1}]", 14);
+				x = x + centeredX;
+			}
+
+			string head = $"|{centeredIter}|{centeredW}|{centeredResNorm}|{centeredErrNorm}|{x}";
+
+			io.WriteLine(head);
+		}
 	}
 }

@@ -2,6 +2,7 @@
 using Matrices;
 using Vectors;
 using Methods;
+using System.Runtime.Serialization;
 
 namespace Lab1 {
 	enum Tasks { 
@@ -88,7 +89,9 @@ namespace Lab1 {
 		static void IterativeMethods() {
 			io.ExcelInit();
 
+			double eps = 0.0001;
 			int n;
+
 			io.GetSize(out n);
 
 			Matrix A = new Matrix(n, n);
@@ -107,8 +110,42 @@ namespace Lab1 {
 			io.WriteLine(B.ToString(), 1);
 			io.SeparateText();
 
-			SIM sim = new SIM(A, B, 0.0001, io);
-			FGDM fgdm = new FGDM(A, B, 0.0001, io);
+			SSRM ssrm = new SSRM(A, B);
+
+			io.WriteLine("Straight squareroot method result:");
+			io.WriteLine(ssrm.Answer.ToString());
+			io.WriteLine($"Matrix norm: {A.EuclideNorm}");
+			io.SeparateText();
+
+			io.WriteLine("Simple iteration method:");
+
+			SIM sim = new SIM(A, B, eps, io);
+
+			io.SeparateText();
+
+			io.WriteLine("Fastest Gradient Descent method:");
+
+			FGDM fgdm = new FGDM(A, B, eps, io);
+
+			io.SeparateText();
+
+			io.WriteLine("SOR method:");
+
+			SOR sor = new SOR(A, B, ssrm.Answer, io);
+
+			io.SeparateText();
+
+			io.WriteLine("Conjugate Gradient method:");
+
+			CGM cgm = new CGM(A, B, ssrm.Answer, eps, io);
+
+			io.SeparateText();
+
+			io.WriteLine($"cond(A) = {A.EuclideCondition}");
+			io.WriteLine("Theoretical number of iterations:");
+			io.WriteLine($"Simple iteration & Fastest Gradient Descent methods = {sim.Theoretical}");
+			io.WriteLine($"SOR method = {sor.Theoretical}");
+			io.WriteLine($"Conjugate Gradient method = {cgm.Theoretical}");
 
 			io.FileClose();
 		}

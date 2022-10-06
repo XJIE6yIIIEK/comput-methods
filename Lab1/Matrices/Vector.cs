@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace Vectors {
 	internal class Vector : ICloneable {
-		private protected double[] vector;   //Матрица значений
+		private protected double[] vector;		//Матрица значений
 
-		private protected int length;        //Длина вектора
+		private protected int length;			//Длина вектора
 
-		private protected double? energyNorm;
-
+		/// <summary>
+		/// Длина вектора
+		/// </summary>
 		public int Length {
 			get { return length; }
 		}
@@ -44,6 +45,11 @@ namespace Vectors {
 			}
 		}
 
+		/// <summary>
+		/// Перестановка элементов
+		/// </summary>
+		/// <param name="swapIndexes">Матрица индексов перестановок</param>
+		/// <returns>Вектор с переставленными элементами</returns>
 		public Vector FastSwap(int[] swapIndexes) {
 			Vector res = new Vector(length);
 
@@ -54,6 +60,12 @@ namespace Vectors {
 			return res;
 		}
 
+		/// <summary>
+		/// Перестановка элементов
+		/// </summary>
+		/// <param name="k">k - й элемент</param>
+		/// <param name="l">l - й элемент</param>
+		/// <returns>Вектор с переставленными элементами</returns>
 		public Vector FastSwap(int k, int l) {
 			Vector res = (Vector)Clone();
 
@@ -64,29 +76,39 @@ namespace Vectors {
 			return res;
 		}
 
+		/// <summary>
+		/// Заполнение вектора указанным значением
+		/// </summary>
+		/// <param name="arr">Массив значений</param>
 		public void Fill(double[] arr) {
 			for(int i = 0; i < length; i++) {
 				vector[i] = arr[i];
 			}
 		}
 
+		/// <summary>
+		/// Заполнение вектора указанным значением
+		/// </summary>
+		/// <param name="num">Значение</param>
 		public void Fill(double num) {
 			for(int i = 0; i < length; i++) {
 				vector[i] = num;
 			}
 		}
 
+		/// <summary>
+		/// Подсчёт энергетической нормы
+		/// </summary>
+		/// <param name="A">Матрица</param>
+		/// <returns>Значение энергетической нормы</returns>
 		public double EnergyNorm(Matrix A) {
-			if(this.energyNorm != null) {
-				return (double)this.energyNorm;
-			}
-
-			double energyNorm = Math.Sqrt(Dot(A * this, this));
-
-			this.energyNorm = energyNorm;
-			return energyNorm;
+			return Math.Sqrt(Dot(A * this, this));
 		}
 
+		/// <summary>
+		/// Копирование
+		/// </summary>
+		/// <returns></returns>
 		public object Clone() {
 			Vector res = new Vector(length);
 
@@ -97,6 +119,12 @@ namespace Vectors {
 			return res;
 		}
 
+		/// <summary>
+		/// Получение вектора из нативного массива
+		/// </summary>
+		/// <param name="arr">Массив значений</param>
+		/// <param name="length">Длина массива</param>
+		/// <returns>Вектор</returns>
 		public static Vector GetFromArray(int[] arr, int length) {
 			Vector res = new Vector(length);
 
@@ -107,6 +135,12 @@ namespace Vectors {
 			return res;
 		}
 
+		/// <summary>
+		/// Скалярное произведение векторов
+		/// </summary>
+		/// <param name="a">Вектор</param>
+		/// <param name="b">Вектор</param>
+		/// <returns>Значение скалярного произведения</returns>
 		public static double Dot(Vector a, Vector b) {
 			if(a.length != b.length) {
 				throw new Exception("Vectors length are not same!");
@@ -121,6 +155,12 @@ namespace Vectors {
 			return res;
 		}
 
+		/// <summary>
+		/// Векторное произведение векторов
+		/// </summary>
+		/// <param name="a">Вектор</param>
+		/// <param name="b">Вектор</param>
+		/// <returns>Матрица</returns>
 		public static Matrix Cross(Vector a, Vector b) {
 			Matrix res = new Matrix(a.length, a.length);
 

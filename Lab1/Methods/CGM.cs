@@ -8,13 +8,20 @@ using System.Threading.Tasks;
 using Lab1;
 
 namespace Methods{
-    internal class CGM{
-        private Vector X;
-        private IOModule io;
-        
-        public Vector Answer {
+    internal class CGM {
+        private Vector X;           //Вычисленный вектор X
+		private IOModule io;        //Модуль IO
+
+		private int theoretical;    //Теоретическое количество итераций
+
+		public int Theoretical {
+			get { return theoretical; }
+		}
+
+		public Vector Answer {
             get { return X; }
         }
+
         private Vector getR(Matrix A, Vector B, Vector curX) {
             return A * curX - B;
         }
@@ -27,10 +34,13 @@ namespace Methods{
             double res = 1 - tau1 / tau / a * Vector.Dot(R1, R1) / Vector.Dot(R, R);
             return 1 / res;
         }
+
         public CGM(Matrix A, Vector B, Vector X, double eps, IOModule io) {
             this.io = io;
 
-            int iter = 1;
+            theoretical = (int)(Math.Sqrt(A.EuclideCondition) * Math.Log(1 / eps) / 2);
+
+			int iter = 1;
             double a = 1;
 
             Vector startVector = (Vector)B.Clone();
@@ -39,7 +49,7 @@ namespace Methods{
             Vector RPrev;
             Vector curX = (Vector)startVector.Clone();
             Vector prevX = (Vector)startVector.Clone();
-            Vector newX = new Vector(X.Length);
+            Vector newX;
             double tau = getTau(A, R);
             double tauPrev;
             double residualNorm = (B - A * curX).EnergyNorm(A);
@@ -74,6 +84,7 @@ namespace Methods{
 
             this.X = (Vector)curX.Clone();
         }
+
         private void WriteStep(int iter, double tau, double residualNorm, double errNorm, Vector X, double alpha)
         {
             string iterStr = string.Format("{0,5}", iter);
@@ -86,5 +97,24 @@ namespace Methods{
 
             io.WriteLine(str);
         }
-    }
+
+		private void WriteHead(int count) {
+			string centeredIter = io.CenterString("Iter", 7);
+			string centeredTau = io.CenterString("Tau", 14);
+			string centeredQ = io.CenterString("Q", 14);
+			string centeredResNorm = io.CenterString("Residual norm", 14);
+			string centeredErrNorm = io.CenterString("Error norm", 14);
+			string centeredErrEst = io.CenterString("Error estimate", 14);
+
+			string x = " ";
+			for(int i = 0; i < count; i++) {
+				string centeredX = io.CenterString($"X[{i + 1}]", 14);
+				x = x + centeredX;
+			}
+
+			string head = $"|{centeredIter}|{centeredTau}|{centeredQ}|{centeredResNorm}|{centeredErrNorm}|{centeredErrEst}|{x}";
+
+			io.WriteLine(head);
+		}
+	}
 }
