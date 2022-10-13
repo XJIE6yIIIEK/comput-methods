@@ -36,7 +36,12 @@ namespace Methods
 			double residualNorm; // норма невязки
 			Vector Z = (Vector)startVector.Clone(); // вектор значений, вычисленных по методу Зейделя
 			Vector newX = (Vector)startVector.Clone(); // текущее значение X
-			Vector prevX = (Vector)startVector.Clone(); // предыдущее значение X
+			Vector prevX; // предыдущее значение X
+
+			if(output) {
+				WriteHead(B.Length);
+			}
+
 			do {
 				prevX = (Vector)newX.Clone(); // сохранение старого значения
 				residualNorm = (B - A * newX).EnergyNorm(A); // вычисление нормы невязки
@@ -69,7 +74,10 @@ namespace Methods
 			theoretical = (int)(Math.Sqrt(A.EuclideCondition) * Math.Log(1 / eps) / 4);
 			
 
-			int min = int.MaxValue;	 // min итераций
+			int min = int.MaxValue;  // min итераций
+
+			WriteHeadW();
+
 			if (w == 0)
 				for (int i = 1; i <= 19; i += 1) {  // поиск минимального значения w 
 				    // решение с заданной погрешностью
@@ -83,7 +91,9 @@ namespace Methods
 					}
 				}
 
+			io.WriteLine();
 			io.WriteLine($"w* = {io.PrettyfyDouble(w, 6)}; ItrMin = {min}"); // вывод верного значения
+			io.WriteLine();
 
 			SOR_Method(w, X, B, A, B, eps, true); // решение с заданной погрешностью и наилучшим w
 		}
@@ -97,7 +107,7 @@ namespace Methods
 			io.WriteLine(str);
 		}
 
-		private void WriteHeadW(int count) { // вывод шапки
+		private void WriteHeadW() { // вывод шапки
 			string centeredIter = io.CenterString("Iter", 7);
 			string centeredW = io.CenterString("w", 14);
 

@@ -183,12 +183,6 @@ namespace Matrices {
 			cols = m;
 			matrix = new double[n, m];
 			this._type = _type;
-
-			for(int i = 0; i < n; i++) {
-				for(int j = 0; j < m; j++) {
-					matrix[i, j] = 0;
-				}
-			}
 		}
 
 		/// <summary>

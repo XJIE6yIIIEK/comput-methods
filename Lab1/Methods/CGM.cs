@@ -11,8 +11,17 @@ namespace Methods{
     internal class CGM{
         private Vector X;
         private IOModule io;
-        
-        public Vector Answer {
+
+		private int theoretical;
+
+		/// <summary>
+		/// Значение теоретического количества итераций
+		/// </summary>
+		public int Theoretical {
+			get { return theoretical; }
+		}
+
+		public Vector Answer {
             get { return X; }
         }
         private Vector getR(Matrix A, Vector B, Vector curX) {
@@ -39,13 +48,15 @@ namespace Methods{
             Vector RPrev;
             Vector curX = (Vector)startVector.Clone();
             Vector prevX = (Vector)startVector.Clone();
-            Vector newX = new Vector(X.Length);
+            Vector newX;
             double tau = getTau(A, R);
             double tauPrev;
             double residualNorm = (B - A * curX).EnergyNorm(A);
+            theoretical = (int)(Math.Log(2 / eps) * Math.Sqrt(A.EuclideCondition) / 2);
 
+			curX = a * curX - tau * a * R;
 
-            curX = a * curX - tau * a * R;
+            WriteHead(B.Length);
             this.WriteStep(iter, tau, residualNorm, (X - curX).EnergyNorm(A), curX, a);
 
             tauPrev = tau;
@@ -86,5 +97,23 @@ namespace Methods{
 
             io.WriteLine(str);
         }
-    }
+
+		private void WriteHead(int count) {
+			string centeredIter = io.CenterString("Iter", 7);
+			string centeredTau = io.CenterString("Tau", 14);
+			string centeredResNorm = io.CenterString("Residual norm", 14);
+			string centeredErrNorm = io.CenterString("Error norm", 14);
+			string centeredAlpha = io.CenterString("Alpha", 14);
+
+			string x = " ";
+			for(int i = 0; i < count; i++) {
+				string centeredX = io.CenterString($"X[{i + 1}]", 15);
+				x = x + centeredX;
+			}
+
+			string head = $"|{centeredIter}|{centeredTau}|{centeredResNorm}|{centeredErrNorm}|{x}|{centeredAlpha}";
+
+			io.WriteLine(head);
+		}
+	}
 }

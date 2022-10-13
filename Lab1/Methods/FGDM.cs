@@ -41,15 +41,13 @@ namespace Methods {
 			WriteHead(B.Length);
 
 			Vector X_Prev = new Vector(B.Length);
-			Vector X_Curr = new Vector(B.Length);
+			Vector X_Curr = (Vector)B.Clone();
 			Vector residual = A * X_Curr - B;
 
 			double stopCriterion;
 			theoretical = (int)(A.EuclideCondition * Math.Log(1 / eps) / 2);
 
 			int iter = 0;
-
-			X_Curr.Fill(new double[] { 1, 2, 3, 4});
 
 			do {
 				Tuple<Vector, Vector, double, double, double> res = FGDMStep(A, B, X_Curr, X_Prev, residual);
@@ -71,6 +69,49 @@ namespace Methods {
 
 
 				WriteStep(iter, tau, q, residualNorm, errNorm, errAss, X);
+
+				iter++;
+			} while(stopCriterion > eps);
+
+			this.X = X_Curr;
+		}
+
+		public FGDM(Matrix A, Vector B, Vector X_Eval, double eps, IOModule io) {
+			this.io = io;
+
+			WriteHead(B.Length);
+
+			Vector X_Prev = new Vector(B.Length);
+			Vector X_Curr = (Vector)B.Clone();
+			Vector residual = A * X_Curr - B;
+
+			double stopCriterion;
+			double residualNorm = residual.EnergyNorm(A);
+			theoretical = (int)(A.EuclideCondition * Math.Log(1 / eps) / 2);
+			eps *= (X_Curr - X_Eval).EnergyNorm(A);
+
+			int iter = 0;
+
+			do {
+				Tuple<Vector, Vector, double, double, double> res = FGDMStep(A, B, X_Curr, X_Prev, residual);
+				Vector X = res.Item1;
+				Vector residualCur = res.Item2;
+				double tau = res.Item3;
+				double q = res.Item4;
+
+				Vector diff = X - X_Curr;
+				double errNorm = diff.EnergyNorm(A);
+				double errAss = q * errNorm / (1 - q);
+
+				X_Prev = X_Curr;
+				X_Curr = X;
+
+				residual = residualCur;
+				stopCriterion = (X - X_Eval).EnergyNorm(A);
+
+				WriteStep(iter, tau, q, residualNorm, stopCriterion, errAss, X);
+
+				residualNorm = res.Item5;
 
 				iter++;
 			} while(stopCriterion > eps);

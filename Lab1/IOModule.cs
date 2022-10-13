@@ -152,7 +152,7 @@ namespace Lab1 {
 		/// <param name="str">Строка, которая будет записана в файл.</param>
 		/// <param name="tab">Отступ строки. Каждый отступ включает в себя пробела.</param>
 		public void WriteLine(string str = "", int tab = 0) {
-			if(str == String.Empty) {
+			if(str == "") {
 				writer.WriteLine();
 				return;
 			}

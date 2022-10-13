@@ -88,6 +88,7 @@ namespace Lab1 {
 		static void IterativeMethods() {
 			io.ExcelInit();
 
+			double eps = 0.0001;
 			int n;
 			io.GetSize(out n);
 
@@ -105,10 +106,53 @@ namespace Lab1 {
 			io.WriteLine(A.ToString(), 1);
 			io.WriteLine("B=");
 			io.WriteLine(B.ToString(), 1);
+
 			io.SeparateText();
 
-			SIM sim = new SIM(A, B, 0.0001, io);
-			FGDM fgdm = new FGDM(A, B, 0.0001, io);
+			io.WriteLine("Straight Squareroot Method");
+			io.WriteLine();
+
+			SSRM ssrm = new SSRM(A, B);
+
+			io.WriteLine($"X = ");
+			io.WriteLine(ssrm.Answer.ToString(), 1);
+
+			io.SeparateText();
+
+			io.WriteLine("Simple Iterations Method");
+			io.WriteLine();
+
+			SIM sim = new SIM(A, B, ssrm.Answer, eps, io);
+
+			io.SeparateText();
+
+			io.WriteLine("Fastest Gradient Descend Method");
+			io.WriteLine();
+
+			FGDM fgdm = new FGDM(A, B, ssrm.Answer, eps, io);
+
+			io.SeparateText();
+
+			io.WriteLine("SOR Method");
+			io.WriteLine();
+
+			SOR sor = new SOR(A, B, ssrm.Answer, eps, io);
+
+			io.SeparateText();
+
+			io.WriteLine("Conjugated Gradients Method");
+			io.WriteLine();
+
+			CGM cgm = new CGM(A, B, ssrm.Answer, eps, io);
+
+			io.SeparateText();
+
+			io.WriteLine($"cond(A) = {A.EuclideCondition}");
+			io.WriteLine();
+			io.WriteLine("Theoretical iterations count");
+			io.WriteLine($"Simple Iterations and Fastest Gradient Descend methods = {sim.Theoretical}");
+			io.WriteLine($"SOR method = {sor.Theoretical}");
+			io.WriteLine($"Conjugated Gradients method = {cgm.Theoretical}");
 
 			io.FileClose();
 		}

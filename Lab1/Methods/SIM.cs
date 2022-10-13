@@ -67,8 +67,47 @@ namespace Methods {
 
 				stopCriterion = residualNorm;
 
-
 				WriteStep(iter, tau, q, residualNorm, errNorm, errAss, X);
+
+				iter++;
+			} while(stopCriterion > eps);
+
+			this.X = X_Curr;
+		}
+
+		public SIM(Matrix A, Vector B, Vector X_Eval, double eps, IOModule io) {
+			this.io = io;
+
+			WriteHead(B.Length);
+
+			Vector X_Prev = new Vector(B.Length);
+			Vector X_Curr = (Vector)B.Clone();
+
+			double stopCriterion;
+			double residualNorm = (A * X_Curr - B).EnergyNorm(A);
+			double tau = 0.9 * 2 / A.EuclideNorm;
+			theoretical = (int)(A.EuclideCondition * Math.Log(1 / eps) / 2);
+			eps *= (X_Curr - X_Eval).EnergyNorm(A);
+
+			int iter = 0;
+
+			do {
+				Tuple<Vector, double, double> res = SIMStep(A, B, X_Curr, X_Prev, tau);
+				Vector X = res.Item1;
+				double q = res.Item2;
+
+				Vector diff = X - X_Curr;
+				double errNorm = diff.EnergyNorm(A);
+				double errAss = q * errNorm / (1 - q);
+
+				X_Prev = X_Curr;
+				X_Curr = X;
+
+				stopCriterion = (X - X_Eval).EnergyNorm(A);
+
+				WriteStep(iter, tau, q, residualNorm, stopCriterion, errAss, X);
+
+				residualNorm = res.Item3;
 
 				iter++;
 			} while(stopCriterion > eps);
