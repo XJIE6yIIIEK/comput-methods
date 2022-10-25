@@ -105,6 +105,14 @@ namespace Vectors {
 			return Math.Sqrt(Dot(A * this, this));
 		}
 
+		public double Norm() {
+			double sum = 0;
+			for (int i = 0; i < this.length; i++) {
+				sum += this[i] * this[i];
+            }
+			return Math.Sqrt(sum);
+        }
+
 		/// <summary>
 		/// Копирование
 		/// </summary>

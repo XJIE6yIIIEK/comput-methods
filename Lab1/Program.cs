@@ -2,193 +2,212 @@
 using Matrices;
 using Vectors;
 using Methods;
+using NonlinearMethods;
+using System.Runtime.Serialization;
 
 namespace Lab1 {
 	enum Tasks { 
 		StraightMethods = 1,
-		IterativeMethods = 2
+		IterativeMethods = 2,
+        NonlinearMethods = 3
 	}
 
     class Program {
-		static IOModule io;
 
-		static void StraightMethods() {
-			io.ExcelInit();
+        static IOModule io;
 
-			int n;
-			io.GetSize(out n);
+        static void StraightMethods()
+        {
+            io.ExcelInit();
 
-			Matrix A = new Matrix(n, n);
-			Vector X = new Vector(n);
+            int n;
+            io.GetSize(out n);
 
-			io.GetMatrixInfo(A, "A");
-			io.GetVectorInfo(X, "X");
+            Matrix A = new Matrix(n, n);
+            Vector X = new Vector(n);
 
-			Vector B = A * X;
+            io.GetMatrixInfo(A, "A");
+            io.GetVectorInfo(X, "X");
 
-			io.TerminateExcel();
-			io.FileOpen();
+            Vector B = A * X;
 
-			io.WriteLine("INPUT");
-			io.WriteLine("X=");
-			io.WriteLine(X.ToString(), 1);
-			io.WriteLine("A=");
-			io.WriteLine(A.ToString(), 1);
-			io.WriteLine("B=");
-			io.WriteLine(B.ToString(), 1);
-			io.SeparateText();
+            io.TerminateExcel();
+            io.FileOpen();
 
-			LU lu = new LU(A, B, n, io);
+            io.WriteLine("INPUT");
+            io.WriteLine("X=");
+            io.WriteLine(X.ToString(), 1);
+            io.WriteLine("A=");
+            io.WriteLine(A.ToString(), 1);
+            io.WriteLine("B=");
+            io.WriteLine(B.ToString(), 1);
+            io.SeparateText();
 
-			Vector _X = lu.X;
-			Matrix X_diff = (lu.L * lu.U) - lu.A;
+            LU lu = new LU(A, B, n, io);
 
-			io.WriteLine("X_Eval =");
-			io.WriteLine(_X.ToString(), 1);
-			io.WriteLine("L * U - P * A =");
-			io.WriteLine(X_diff.ToString(), 1);
-			io.SeparateText();
+            Vector _X = lu.X;
+            Matrix X_diff = (lu.L * lu.U) - lu.A;
 
-			//Нахождение обратной матрицы
-			Matrix A_INVERSE = lu.U.Inverse * lu.L.Inverse * lu.E.FastSwap(lu.m);
-			//Проверка
-			Matrix A_diff = lu.A * A_INVERSE - lu.P;
+            io.WriteLine("X_Eval =");
+            io.WriteLine(_X.ToString(), 1);
+            io.WriteLine("L * U - P * A =");
+            io.WriteLine(X_diff.ToString(), 1);
+            io.SeparateText();
 
-			io.WriteLine("A=");
-			io.WriteLine(lu.A.ToString(), 1);
-			io.WriteLine("A^(-1)=");
-			io.WriteLine(A_INVERSE.ToString(), 1);
-			io.WriteLine("A * A^(-1) - E =");
-			io.WriteLine(A_diff.ToString(), 1);
-			io.SeparateText();
+            //Нахождение обратной матрицы
+            Matrix A_INVERSE = lu.U.Inverse * lu.L.Inverse * lu.E.FastSwap(lu.m);
+            //Проверка
+            Matrix A_diff = lu.A * A_INVERSE - lu.P;
 
-			//Нахождение норм
-			double quadNorm = lu.A.QuadricNorm * A_INVERSE.QuadricNorm;
-			double octNorm = lu.A.OctoNorm * A_INVERSE.OctoNorm;
-			double eucNorm = lu.A.EuclideNorm;
+            io.WriteLine("A=");
+            io.WriteLine(lu.A.ToString(), 1);
+            io.WriteLine("A^(-1)=");
+            io.WriteLine(A_INVERSE.ToString(), 1);
+            io.WriteLine("A * A^(-1) - E =");
+            io.WriteLine(A_diff.ToString(), 1);
+            io.SeparateText();
 
-			io.WriteLine("Cond(A) = ");
-			io.WriteLine($"Quadratic norm = {quadNorm}", 1);
-			io.WriteLine($"Octagon norm = {octNorm}", 1);
-			io.WriteLine($"Euclidean norm = {eucNorm}", 1);
-			io.WriteLine($"|A| = {lu.GetSign() * lu.L.Determinant}");
-			io.SeparateText();
+            //Нахождение норм
+            double quadNorm = lu.A.QuadricNorm * A_INVERSE.QuadricNorm;
+            double octNorm = lu.A.OctoNorm * A_INVERSE.OctoNorm;
+            double eucNorm = lu.A.EuclideNorm;
 
-			//Нахождение невязки
-			Vector B_diff = lu.A * _X - B.FastSwap(lu.m);
+            io.WriteLine("Cond(A) = ");
+            io.WriteLine($"Quadratic norm = {quadNorm}", 1);
+            io.WriteLine($"Octagon norm = {octNorm}", 1);
+            io.WriteLine($"Euclidean norm = {eucNorm}", 1);
+            io.WriteLine($"|A| = {lu.GetSign() * lu.L.Determinant}");
+            io.SeparateText();
 
-			io.WriteLine("A * X - B =");
-			io.WriteLine(B_diff.ToString(), 1);
-			io.WriteLine("Error = ");
-			io.WriteLine((X - _X).ToString(), 1);
+            //Нахождение невязки
+            Vector B_diff = lu.A * _X - B.FastSwap(lu.m);
 
-			io.FileClose();
-		}
+            io.WriteLine("A * X - B =");
+            io.WriteLine(B_diff.ToString(), 1);
+            io.WriteLine("Error = ");
+            io.WriteLine((X - _X).ToString(), 1);
 
-		static void IterativeMethods() {
-			io.ExcelInit();
+            io.FileClose();
+        }
 
-			double eps = 0.0001;
-			int n;
-			io.GetSize(out n);
+        static void IterativeMethods()
+        {
+            io.ExcelInit();
 
-			Matrix A = new Matrix(n, n);
-			Vector B = new Vector(n);
+            double eps = 0.0001;
+            int n;
 
-			io.GetMatrixInfo(A, "A");
-			io.GetVectorInfo(B, "B");
+            io.GetSize(out n);
 
-			io.TerminateExcel();
-			io.FileOpen();
+            Matrix A = new Matrix(n, n);
+            Vector B = new Vector(n);
 
-			io.WriteLine("INPUT");
-			io.WriteLine("A=");
-			io.WriteLine(A.ToString(), 1);
-			io.WriteLine("B=");
-			io.WriteLine(B.ToString(), 1);
+            io.GetMatrixInfo(A, "A");
+            io.GetVectorInfo(B, "B");
 
-			io.SeparateText();
+            io.TerminateExcel();
+            io.FileOpen();
 
-			io.WriteLine("Straight Squareroot Method");
-			io.WriteLine();
+            io.WriteLine("INPUT");
+            io.WriteLine("A=");
+            io.WriteLine(A.ToString(), 1);
+            io.WriteLine("B=");
+            io.WriteLine(B.ToString(), 1);
+            io.SeparateText();
 
-			SSRM ssrm = new SSRM(A, B);
+            Methods.SSRM ssrm = new Methods.SSRM(A, B);
 
-			io.WriteLine($"X = ");
-			io.WriteLine(ssrm.Answer.ToString(), 1);
+            io.WriteLine("Straight squareroot method result:");
+            io.WriteLine(ssrm.Answer.ToString());
+            io.WriteLine($"Matrix norm: {A.EuclideNorm}");
+            io.SeparateText();
 
-			io.SeparateText();
+            io.WriteLine("Simple iteration method:");
 
-			io.WriteLine("Simple Iterations Method");
-			io.WriteLine();
+            Methods.SIM sim = new Methods.SIM(A, B, eps, io);
 
-			SIM sim = new SIM(A, B, ssrm.Answer, eps, io);
+            io.SeparateText();
 
-			io.SeparateText();
+            io.WriteLine("Fastest Gradient Descent method:");
 
-			io.WriteLine("Fastest Gradient Descend Method");
-			io.WriteLine();
+            Methods.FGDM fgdm = new Methods.FGDM(A, B, eps, io);
 
-			FGDM fgdm = new FGDM(A, B, ssrm.Answer, eps, io);
+            io.SeparateText();
 
-			io.SeparateText();
+            io.WriteLine("SOR method:");
 
-			io.WriteLine("SOR Method");
-			io.WriteLine();
+            Methods.SOR sor = new Methods.SOR(A, B, ssrm.Answer, eps, io);
 
-			SOR sor = new SOR(A, B, ssrm.Answer, eps, io);
+            io.SeparateText();
 
-			io.SeparateText();
+            io.WriteLine("Conjugate Gradient method:");
 
-			io.WriteLine("Conjugated Gradients Method");
-			io.WriteLine();
+            Methods.CGM cgm = new Methods.CGM(A, B, ssrm.Answer, eps, io);
 
-			CGM cgm = new CGM(A, B, ssrm.Answer, eps, io);
+            io.SeparateText();
 
-			io.SeparateText();
+            io.WriteLine($"cond(A) = {A.EuclideCondition}");
+            io.WriteLine("Theoretical number of iterations:");
+            //io.WriteLine($"Simple iteration & Fastest Gradient Descent methods = {sim.Theoretical}");
+            io.WriteLine($"SOR method = {sor.Theoretical}");
+            io.WriteLine($"Conjugate Gradient method = {cgm.Theoretical}");
 
-			io.WriteLine($"cond(A) = {A.EuclideCondition}");
-			io.WriteLine();
-			io.WriteLine("Theoretical iterations count");
-			io.WriteLine($"Simple Iterations and Fastest Gradient Descend methods = {sim.Theoretical}");
-			io.WriteLine($"SOR method = {sor.Theoretical}");
-			io.WriteLine($"Conjugated Gradients method = {cgm.Theoretical}");
+            io.FileClose();
+        }
+        static void NonlinearMethods() {
+            io.FileOpen();
 
-			io.FileClose();
-		}
+            Vector v = new Vector(2);
+            v[0] = 0.9;
+            v[1] = 2.6;
+            NonlinearMethods.NM nm = new NonlinearMethods.NM(v, io);
 
-		static void TaskSwitch(int task) {
-			switch((Tasks)task) {
-				case Tasks.StraightMethods: {
-					StraightMethods();
-				} break;
+            NonlinearMethods.SIM sim = new NonlinearMethods.SIM(nm.Answer, v);
+            
+        }
 
-				case Tasks.IterativeMethods: {
-					IterativeMethods();
-				} break;
+        static void TaskSwitch(int task) {
+            switch ((Tasks)task) {
+                case Tasks.StraightMethods: {
+                        StraightMethods();
+                    } break;
 
-				default: {
-					Console.WriteLine("Wrong program");
-				} break;
-			}
-		}
+                case Tasks.IterativeMethods: {
+                        IterativeMethods();
+                    } break;
+
+                case Tasks.NonlinearMethods: {
+                    NonlinearMethods();
+                } break;
+                
+                default: {
+                        Console.WriteLine("Wrong program");
+                    } break;
+            }
+        }
 
         static void Main(string[] args) {
+
+            Console.ReadKey();
+
             io = new IOModule();
 
-			Console.WriteLine("Choose program:");
-			Console.WriteLine("1 - Straight Methods (Lab 1)");
-			Console.WriteLine("2 - Iterative Methods (Lab 2)");
-			Console.Write("Enter number: ");
+            Console.WriteLine("Choose program:");
+            Console.WriteLine("1 - Straight Methods (Lab 1)");
+            Console.WriteLine("2 - Iterative Methods (Lab 2)");
+            Console.WriteLine("3 - Nonlinear Methods (Lab3)");
+            Console.Write("Enter number: ");
 
-			int task;
+            Console.WriteLine();
 
-			if(int.TryParse(Console.ReadLine(), out task)) {
-				TaskSwitch(task);
-			}
+            int task;
 
-			Console.WriteLine("DONE!");
-			Console.Read();
+            if (int.TryParse(Console.ReadLine(), out task)) {
+                TaskSwitch(task);
+            }
+
+            Console.WriteLine("DONE!");
+            Console.Read();
         }
     }
 }
