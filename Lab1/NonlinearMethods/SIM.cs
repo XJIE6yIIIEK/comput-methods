@@ -5,34 +5,94 @@ using System.Text;
 using System.Threading.Tasks;
 using Lab1;
 using Vectors;
+using Matrices;
 
 namespace NonlinearMethods {
     class SIM {
-        Vector NMsolution;
-        Vector startVector;
-        Vector curVector;
-        Vector prevVector;
-        Functions f = new Functions();
-        public SIM(Vector solution, Vector startVector) {
-            this.NMsolution = solution;
-            this.startVector = startVector;
-            prevVector = startVector;
-            SimpleIterationMethod();
-        }
+		IOModule io;							// модуль ввода - вывода
+        Vector NMsolution;						// точное решение	
+        Vector startVector;						// вектор начальных значений
+        Vector curVector;						// текущее значение вектора
+        Vector prevVector;						// предыдущее значение вектора
+		_Functions Fi1 = new Fi1();				// первое уравнение системы Fi
+		_Functions Fi2 = new Fi2();				// второе уравнение системы Fi
+		_Functions F1 = new F1();				// первое уравнение системы F
+		_Functions F2 = new F2();				// второе уравнение системы F
+		Matrix jacobian = new Matrix(2, 2);		// якобиан
+		Vector Fi = new Vector(2);				// система Fi
+		double errResNorm;						// норма невязки
+		public SIM(Vector solution, Vector startVector, IOModule io, double E) { // конструктор
+			this.io = io;
+			this.NMsolution = solution;
+			this.startVector = startVector;
+			prevVector = startVector;
+			SimpleIterationMethod(E);
+		}
+		private Matrix GetJacobian(Vector X) { // получить пересчитанный якобиан
+			Matrix m = new Matrix(2, 2);
+			m[0, 0] = Fi1.EvaluateDerivativeX(X);
+			m[0, 1] = Fi1.EvaluateDerivativeY(X);
+			m[1, 0] = Fi2.EvaluateDerivativeX(X);
+			m[1, 1] = Fi2.EvaluateDerivativeY(X);
+			return m;
+		}
 
-        public void SimpleIterationMethod() {
-            int itr = 1;
-            do {
-                curVector = f.Fi(prevVector);
-                prevVector = curVector;
+		private Vector GetFi(Vector X) { // получить вектор Fi
+			Vector v = new Vector(2);
+			v[0] = Fi1.Evaluate(X);
+			v[1] = Fi2.Evaluate(X);
+			return v;
+		}
 
-            }
-            while((f.F(curVector) - f.F(NMsolution)).Norm() >= 1E-4);
-        }
+		private Vector GetF(Vector X) { // получить вектор F
+			Vector v = new Vector(2);
+			v[0] = F1.Evaluate(X);
+			v[1] = F2.Evaluate(X);
+			return v;
+		}
+		private void SimpleIterationMethod(double E) { // Метод Простых Итераций
+			int itr = 1; // номер итерации
+			WriteHead(); // печать шапки
+			do {
+				curVector = GetFi(prevVector); // пересчитать значение текущего вектора
+				prevVector = curVector; // передать текущее значение в предыдущее для след итерации
 
-        //Console.Write(itr++ + " ");
-        //Console.Write(curVector.ToString() + " ");
-        //Console.Write((f.F(curVector) - f.F(NMsolution)).Norm() + " ");
-        //Console.WriteLine((curVector - NMsolution).Norm());
-    }
+				errResNorm = (GetF(curVector) - GetF(NMsolution)).Norm(); // норма невязки
+				double err = (curVector - NMsolution).Norm(); // погрешность
+				jacobian = GetJacobian(curVector); // якобиан
+				WriteStep(itr++, curVector, errResNorm, 0.0, err, jacobian.EuclideNorm);
+			}
+			while(errResNorm >= E); // условие выхода - норма невязки < E
+		}
+
+		private void WriteStep(int iter, Vector X, double residualNorm, double errEstimate, double errNorm, double jNorm) { // печать шага итерации
+			string iterStr = string.Format("{0,5}", iter);
+			string x = io.PrettyfyDouble(X[0], 12);
+			string y = io.PrettyfyDouble(X[1], 12);
+			string resNorm = io.PrettyfyDouble(residualNorm, 12);
+			string errEst = io.PrettyfyDouble(errEstimate, 12);
+			string errN = io.PrettyfyDouble(errNorm, 12);
+			string jacobianNorm = io.PrettyfyDouble(jNorm, 12);
+
+			string str = $"| {iterStr} | {x} | {y} | {resNorm} | {errEst} | {errN} | {jacobianNorm}";
+
+			io.WriteLine(str);
+		}
+
+		private void WriteHead() { // печать шапки
+			string centeredIter = io.CenterString("Iter", 7);
+			string centeredX = io.CenterString("x", 14);
+			string centeredY = io.CenterString("y", 14);
+			string centeredResNorm = io.CenterString("Residual norm", 14);
+			string errEstimate = io.CenterString("Error Estimate", 14);
+			string errNorm = io.CenterString("Error norm", 14);
+			string jNorm = io.CenterString("Jacobian norm", 14);
+
+			string head = $"|{centeredIter}|{centeredX}|{centeredY}|{centeredResNorm}|{errEstimate}|{errNorm}|{jNorm}";
+
+			Console.WriteLine(head);
+		}
+
+
+	}
 }
