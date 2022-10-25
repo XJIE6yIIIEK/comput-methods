@@ -8,36 +8,58 @@ using Matrices;
 using Lab1;
 
 namespace NonlinearMethods {
-    class NM {
-        IOModule io;
-        Vector curVector;
-        Vector prevVector;
-        Vector startVector;
-        Functions f = new Functions();
+    class NM { // метод Ньютона
+        IOModule io;                        // модуль ввода-вывода
+        Vector curVector;                   // текущее значение вектора
+        Vector prevVector;                  // предыдущее значение вектора
+        Vector startVector;                 // стартовое значение вектора 
+        _Functions F1 = new F1();           // первое уравнение системы F
+        _Functions F2 = new F2();           // второе уравнение системы F
+        Matrix derivF= new Matrix(2, 2);    // матрица производных
+        Vector F = new Vector(2);           // решение системы F
 
-        public Vector Answer{
+        public Vector Answer{ // получить ответ
             get { return curVector; }
         }
-        public NM(Vector startVector, IOModule io) {
+        public NM(Vector startVector, IOModule io) {  // конструктор
             this.io = io;
             this.prevVector = startVector;
             this.startVector = startVector;
             NewtonMethod();
         } 
-        private void NewtonMethod() {
-            int iter = 0;
-            WriteHead();
-            do {
-                curVector = prevVector - f.derivF(prevVector) * f.F(prevVector);
-                double resNorm = f.F(curVector).Norm();
-                prevVector = curVector;
 
-                WriteStep(++iter, curVector, resNorm, f.F(curVector));
-            }
-            while(f.F(curVector).Norm() > 1E-12);
+        private void FillDerivF(Vector X) { // заполнение матрицы производных
+            derivF[0, 0] = F1.EvaluateDerivativeX(X);
+            derivF[0, 1] = F1.EvaluateDerivativeY(X);
+            derivF[1, 0] = F2.EvaluateDerivativeX(X);
+            derivF[1, 1] = F2.EvaluateDerivativeY(X);
+            derivF = derivF.Inverse;
         }
 
-        private void WriteStep(int iter, Vector X, double residualNorm, Vector F) {
+        private void FillF(Vector X) { // заполнение вектора F
+            F[0] = F1.Evaluate(X);
+            F[1] = F2.Evaluate(X);
+        }
+        private void NewtonMethod() {
+            int iter = 0; // текущая итерация 
+            WriteHead(); // вывод шапки
+            do {
+                FillDerivF(prevVector); // пересчитать значения матрицы производных
+                FillF(prevVector); // пересчитать значения F
+
+                curVector = prevVector - derivF * F; // подсчет нового значения вектора решений
+
+                FillF(curVector); // пересчитать значения F
+
+                prevVector = curVector; // передать текущее значения в предыдущее для след итерации
+
+                double resNorm = F.Norm(); // норма
+                WriteStep(++iter, curVector, resNorm, F);
+            }
+            while(F.Norm() > 1E-12); // подсчет с точностью 10^-12
+        } 
+
+        private void WriteStep(int iter, Vector X, double residualNorm, Vector F) { // печать шага итерации
             string iterStr = string.Format("{0,5}", iter);
             string x = io.PrettyfyDouble(X[0], 12);
             string y = io.PrettyfyDouble(X[1], 12);
@@ -50,7 +72,7 @@ namespace NonlinearMethods {
             io.WriteLine(str);
         }
 
-        private void WriteHead() { 
+        private void WriteHead() { // печать шапки
             string centeredIter = io.CenterString("Iter", 7);
             string centeredX = io.CenterString("x", 14);
             string centeredY = io.CenterString("y", 14);
