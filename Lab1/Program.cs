@@ -1,9 +1,11 @@
 ﻿using System;
 using Matrices;
 using Vectors;
-using Methods;
 using NonlinearMethods;
 using System.Runtime.Serialization;
+
+using FunctionVector = System.Collections.Generic.List<NonlinearMethods.FunctionDelegate>;
+using FunctionMatrix = System.Collections.Generic.List<System.Collections.Generic.List<NonlinearMethods.FunctionDelegate>>;
 
 namespace Lab1 {
 	enum Tasks { 
@@ -43,7 +45,7 @@ namespace Lab1 {
             io.WriteLine(B.ToString(), 1);
             io.SeparateText();
 
-            LU lu = new LU(A, B, n, io);
+            Methods.LU lu = new Methods.LU(A, B, n, io);
 
             Vector _X = lu.X;
             Matrix X_diff = (lu.L * lu.U) - lu.A;
@@ -157,14 +159,45 @@ namespace Lab1 {
         static void NonlinearMethods() {
             io.FileOpen();
 
-            Vector v = new Vector(2);
-            v[0] = 0.9;
-            v[1] = 2.6;
-            NonlinearMethods.NM nm = new NonlinearMethods.NM(v, io);
+            Vector X = new Vector(2);
+            X[0] = 0.9;
+            X[1] = 2.6;
+            NonlinearMethods.NM nm = new NonlinearMethods.NM(X, io);
 
-            NonlinearMethods.SIM sim = new NonlinearMethods.SIM(nm.Answer, v);
-            
-        }
+            double eps = 1E-4;
+
+            //NonlinearMethods.SIM sim = new NonlinearMethods.SIM(nm.Answer, v);
+
+            IFunctions f1 = new _F1();
+			IFunctions f2 = new _F2();
+			IFunctions f = new _F();
+
+			FunctionVector functions = new FunctionVector();
+            functions.Add(f1.Evaluate);
+			functions.Add(f2.Evaluate);
+
+            /*FunctionVector fDerivatives = new FunctionVector();
+			fDerivatives.Add(f.EvaluateDerivativeX);
+			fDerivatives.Add(f.EvaluateDerivativeY);*/
+
+            FunctionMatrix derivatives = new FunctionMatrix();
+            FunctionVector derivativesF1 = new FunctionVector();
+            derivativesF1.Add(f1.EvaluateDerivativeX);
+			derivativesF1.Add(f1.EvaluateDerivativeY);
+			FunctionVector derivativesF2 = new FunctionVector();
+			derivativesF1.Add(f2.EvaluateDerivativeX);
+			derivativesF1.Add(f2.EvaluateDerivativeY);
+            derivatives.Add(derivativesF1);
+			derivatives.Add(derivativesF2);
+
+            io.SeparateText();
+
+            io.WriteLine("Gradient Descend Method");
+
+            GD gd = new GD(nm.Answer, functions, f, derivatives, 1.0, 0.5, eps, io);
+
+			io.SeparateText();
+		}
 
         static void TaskSwitch(int task) {
             switch ((Tasks)task) {
@@ -187,9 +220,6 @@ namespace Lab1 {
         }
 
         static void Main(string[] args) {
-
-            Console.ReadKey();
-
             io = new IOModule();
 
             Console.WriteLine("Choose program:");

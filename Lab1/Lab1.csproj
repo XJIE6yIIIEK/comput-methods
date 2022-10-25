@@ -51,10 +51,13 @@
     <Compile Include="Methods\CGM.cs" />
     <Compile Include="Methods\FGDM.cs" />
     <Compile Include="Methods\LU.cs" />
-    <Compile Include="Methods\Method.cs" />
     <Compile Include="Methods\SIM.cs" />
     <Compile Include="Methods\SOR.cs" />
     <Compile Include="Methods\SSRM.cs" />
+    <Compile Include="NonlinearMethods\Functions.cs" />
+    <Compile Include="NonlinearMethods\GD.cs" />
+    <Compile Include="NonlinearMethods\NM.cs" />
+    <Compile Include="NonlinearMethods\SIM.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
