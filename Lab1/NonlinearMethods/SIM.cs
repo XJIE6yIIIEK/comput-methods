@@ -14,14 +14,13 @@ namespace NonlinearMethods {
         Vector startVector;						// вектор начальных значений
         Vector curVector;						// текущее значение вектора
         Vector prevVector;						// предыдущее значение вектора
-		IFunctions Fi1 = new Fi1();				// первое уравнение системы Fi
-		IFunctions Fi2 = new Fi2();				// второе уравнение системы Fi
-		IFunctions F1 = new F1();				// первое уравнение системы F
-		IFunctions F2 = new F2();				// второе уравнение системы F
+		IFunctions Fi1 = new _Fi1();			// первое уравнение системы Fi
+		IFunctions Fi2 = new _Fi2();			// второе уравнение системы Fi
+		IFunctions F1 = new _F1();				// первое уравнение системы F
+		IFunctions F2 = new _F2();				// второе уравнение системы F
 		Matrix jacobian = new Matrix(2, 2);		// якобиан
 		Vector Fi = new Vector(2);				// система Fi
 		double errResNorm;						// норма невязки
-
 		public SIM(Vector solution, Vector startVector, IOModule io, double E) { // конструктор
 			this.io = io;
 			this.NMsolution = solution;
@@ -29,7 +28,6 @@ namespace NonlinearMethods {
 			prevVector = startVector;
 			SimpleIterationMethod(E);
 		}
-
 		private Matrix GetJacobian(Vector X) { // получить пересчитанный якобиан
 			Matrix m = new Matrix(2, 2);
 			m[0, 0] = Fi1.EvaluateDerivativeX(X);
@@ -38,14 +36,12 @@ namespace NonlinearMethods {
 			m[1, 1] = Fi2.EvaluateDerivativeY(X);
 			return m;
 		}
-
 		private Vector GetFi(Vector X) { // получить вектор Fi
 			Vector v = new Vector(2);
 			v[0] = Fi1.Evaluate(X);
 			v[1] = Fi2.Evaluate(X);
 			return v;
 		}
-
 		private Vector GetF(Vector X) { // получить вектор F
 			Vector v = new Vector(2);
 			v[0] = F1.Evaluate(X);
