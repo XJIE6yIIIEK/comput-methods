@@ -107,7 +107,7 @@ namespace NonlinearMethods {
 		}
 
 		public double EvaluateDerivativeY(Vector X) {
-			return 1;
+			return -1;
 		}
 
 		public double Evaluate(Vector X) {
@@ -125,7 +125,7 @@ namespace NonlinearMethods {
 		}
 
 		public double Evaluate(Vector X) {
-			return 2 * X[0] - Math.Cos(X[1]) - 2;
+			return 2 * X[0] + Math.Cos(X[1]) - 2;
 		}
 	}
 
