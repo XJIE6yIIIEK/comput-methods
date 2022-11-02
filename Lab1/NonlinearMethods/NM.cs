@@ -13,8 +13,8 @@ namespace NonlinearMethods {
         Vector curVector;                   // текущее значение вектора
         Vector prevVector;                  // предыдущее значение вектора
         Vector startVector;                 // стартовое значение вектора 
-        IFunctions F1 = new _F1();           // первое уравнение системы F
-        IFunctions F2 = new _F2();           // второе уравнение системы F
+        IFunctions F1 = new F1();           // первое уравнение системы F
+        IFunctions F2 = new F2();           // второе уравнение системы F
         Matrix derivF = new Matrix(2, 2);    // матрица производных
         Vector F = new Vector(2);           // решение системы F
 

@@ -160,33 +160,29 @@ namespace Lab1 {
             io.FileOpen();
 
             Vector X = new Vector(2);
-            X[0] = 0.9;
-            X[1] = 2.6;
-            NonlinearMethods.NM nm = new NonlinearMethods.NM(X, io);
+			X[0] = 0.9;
+			X[1] = 2.6;
+			NonlinearMethods.NM nm = new NonlinearMethods.NM(X, io);
 
             double eps = 1E-4;
 
             //NonlinearMethods.SIM sim = new NonlinearMethods.SIM(nm.Answer, v);
 
-            IFunctions f1 = new _F1();
-			IFunctions f2 = new _F2();
-			IFunctions f = new _F();
+            IFunctions f1 = new F1();
+			IFunctions f2 = new F2();
+			IFunctions f = new F();
 
 			FunctionVector functions = new FunctionVector();
             functions.Add(f1.Evaluate);
 			functions.Add(f2.Evaluate);
-
-            /*FunctionVector fDerivatives = new FunctionVector();
-			fDerivatives.Add(f.EvaluateDerivativeX);
-			fDerivatives.Add(f.EvaluateDerivativeY);*/
 
             FunctionMatrix derivatives = new FunctionMatrix();
             FunctionVector derivativesF1 = new FunctionVector();
             derivativesF1.Add(f1.EvaluateDerivativeX);
 			derivativesF1.Add(f1.EvaluateDerivativeY);
 			FunctionVector derivativesF2 = new FunctionVector();
-			derivativesF1.Add(f2.EvaluateDerivativeX);
-			derivativesF1.Add(f2.EvaluateDerivativeY);
+			derivativesF2.Add(f2.EvaluateDerivativeX);
+			derivativesF2.Add(f2.EvaluateDerivativeY);
             derivatives.Add(derivativesF1);
 			derivatives.Add(derivativesF2);
 
@@ -194,7 +190,7 @@ namespace Lab1 {
 
             io.WriteLine("Gradient Descend Method");
 
-            GD gd = new GD(nm.Answer, functions, f, derivatives, 1.0, 0.5, eps, io);
+            GD gd = new GD(X, nm.Answer, functions, f, derivatives, 1.0, 0.5, eps, io);
 
 			io.SeparateText();
 		}

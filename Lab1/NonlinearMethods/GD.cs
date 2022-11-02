@@ -19,14 +19,14 @@ namespace NonlinearMethods {
 			get { return X; }
 		}
 
-		public GD(Vector _X, FunctionVector functions, IFunctions F, FunctionMatrix derivatives, double lambda, double alpha, double eps, IOModule io) {
+		public GD(Vector _X, Vector X_NM, FunctionVector functions, IFunctions F, FunctionMatrix derivatives, double alpha, double lambda, double eps, IOModule io) {
 			this.io = io;
 
 			Vector X0 = (Vector)_X.Clone();
-			Vector X = (Vector)_X.Clone();
+			Vector X;
 
-			double residualNorm = 0;
-			double q = 0;
+			double residualNorm = 1;
+			double err = 0;
 			double startAlpha = alpha;
 			int iter = 0;
 
@@ -49,7 +49,7 @@ namespace NonlinearMethods {
 
 				for(int i = 0; i < Jacobian.Rows; i++) {
 					for(int j = 0; j < Jacobian.Cols; j++) {
-						Jacobian[i, j] = derivatives[i][j](X);
+						Jacobian[i, j] = derivatives[i][j](X0);
 					}
 				}
 
@@ -59,11 +59,11 @@ namespace NonlinearMethods {
 
 				X = X0 - startAlpha * derivativesFVector;
 
-				q = Jacobian.EuclideNorm;
+				err = (X_NM - X).Norm();
 
-				residualNorm = Math.Sqrt(Math.Pow(X[0] - X0[0], 2) + Math.Pow(X[1] - X0[1], 2));
+				residualNorm = Math.Sqrt(Math.Pow(functions[0](X), 2) + Math.Pow(functions[1](X), 2));
 
-				WriteStep(iter, X, residualNorm, functions, q, alpha);
+				WriteStep(iter, X, residualNorm, functions, err, startAlpha);
 
 				X0 = (Vector)X.Clone();
 			} while(residualNorm > eps);
@@ -71,17 +71,17 @@ namespace NonlinearMethods {
 			this.X = X;
 		}
 
-		private void WriteStep(int iter, Vector X, double residualNorm, FunctionVector functions, double q, double _alpha) { // печать шага итерации
+		private void WriteStep(int iter, Vector X, double residualNorm, FunctionVector functions, double err, double _alpha) { // печать шага итерации
 			string iterStr = string.Format("{0,5}", iter);
 			string x = io.PrettyfyDouble(X[0], 12);
 			string y = io.PrettyfyDouble(X[1], 12);
 			string resNorm = io.PrettyfyDouble(residualNorm, 12);
 			string f1 = io.PrettyfyDouble(functions[0](X), 12);
 			string f2 = io.PrettyfyDouble(functions[1](X), 12);
-			string jacobianNorm = io.PrettyfyDouble(q, 12);
+			string _err = io.PrettyfyDouble(err, 12);
 			string alpha = io.PrettyfyDouble(_alpha, 12);
 
-			string str = $"| {iterStr} | {x} | {y} | {resNorm} | {f1} | {f2} | {jacobianNorm} | {alpha}";
+			string str = $"| {iterStr} | {x} | {y} | {resNorm} | {f1} | {f2} | {_err} | {alpha}";
 
 			io.WriteLine(str);
 		}

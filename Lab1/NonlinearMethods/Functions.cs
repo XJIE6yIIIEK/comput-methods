@@ -45,7 +45,21 @@ namespace NonlinearMethods {
         }
     }
 
-    class Fi1 : IFunctions {
+	class F : IFunctions {
+		public double EvaluateDerivativeX(Vector X) {
+			return 2 * (Math.Cos(X[1] - 1) + X[0] - 0.8) + 2 * Math.Sin(X[0]) * (X[1] - Math.Cos(X[0]) - 2);
+		}
+
+		public double EvaluateDerivativeY(Vector X) {
+			return 2 * (-Math.Sin(X[1] - 1)) * (Math.Cos(X[1] - 1) + X[0] - 0.8) + 2 * (X[1] - Math.Cos(X[0]) - 2);
+		}
+
+		public double Evaluate(Vector X) {
+			return Math.Pow(X[1] - Math.Cos(X[0]) - 2, 2) + Math.Pow(Math.Cos(X[1] - 1) + X[0] - 0.8, 2);
+		}
+	}
+
+	class Fi1 : IFunctions {
         public double EvaluateDerivativeX(Vector X) {
             return 0.0;
         }
@@ -107,7 +121,7 @@ namespace NonlinearMethods {
 		}
 
 		public double EvaluateDerivativeY(Vector X) {
-			return -1;
+			return 1;
 		}
 
 		public double Evaluate(Vector X) {
@@ -139,7 +153,7 @@ namespace NonlinearMethods {
 		}
 
 		public double Evaluate(Vector X) {
-			return Math.Pow(2 * X[0] - Math.Cos(X[1]) - 2, 2) + Math.Pow(Math.Sin(X[0] + 1) - X[1] - 2.2, 2);
+			return Math.Pow(2 * X[0] + Math.Cos(X[1]) - 2, 2) + Math.Pow(Math.Sin(X[0] + 1) - X[1] - 2.2, 2);
 		}
 	}
 }
