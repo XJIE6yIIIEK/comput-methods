@@ -14,13 +14,14 @@ namespace NonlinearMethods {
         Vector startVector;						// вектор начальных значений
         Vector curVector;						// текущее значение вектора
         Vector prevVector;						// предыдущее значение вектора
-		IFunctions Fi1 = new _Fi1();			// первое уравнение системы Fi
-		IFunctions Fi2 = new _Fi2();			// второе уравнение системы Fi
-		IFunctions F1 = new _F1();				// первое уравнение системы F
-		IFunctions F2 = new _F2();				// второе уравнение системы F
+		IFunctions Fi1 = new Fi1();				// первое уравнение системы Fi
+		IFunctions Fi2 = new Fi2();				// второе уравнение системы Fi
+		IFunctions F1 = new F1();				// первое уравнение системы F
+		IFunctions F2 = new F2();				// второе уравнение системы F
 		Matrix jacobian = new Matrix(2, 2);		// якобиан
 		Vector Fi = new Vector(2);				// система Fi
-		double errResNorm;						// норма невязки
+		double errResNorm;                      // норма невязки
+		double errEst;
 		public SIM(Vector solution, Vector startVector, IOModule io, double E) { // конструктор
 			this.io = io;
 			this.NMsolution = solution;
@@ -53,12 +54,14 @@ namespace NonlinearMethods {
 			WriteHead(); // печать шапки
 			do {
 				curVector = GetFi(prevVector); // пересчитать значение текущего вектора
+				jacobian = GetJacobian(curVector); // якобиан
+				errEst = jacobian.EuclideNorm * (curVector - prevVector).Norm() / (1 - jacobian.EuclideNorm);
 				prevVector = curVector; // передать текущее значение в предыдущее для след итерации
 
 				errResNorm = (GetF(curVector) - GetF(NMsolution)).Norm(); // норма невязки
 				double err = (curVector - NMsolution).Norm(); // погрешность
-				jacobian = GetJacobian(curVector); // якобиан
-				WriteStep(itr++, curVector, errResNorm, 0.0, err, jacobian.EuclideNorm);
+				
+				WriteStep(itr++, curVector, errResNorm, errEst, err, jacobian.EuclideNorm);
 			}
 			while(errResNorm >= E); // условие выхода - норма невязки < E
 		}
