@@ -2,10 +2,6 @@
 using Matrices;
 using Vectors;
 using NonlinearMethods;
-using System.Runtime.Serialization;
-
-using FunctionVector = System.Collections.Generic.List<NonlinearMethods.FunctionDelegate>;
-using FunctionMatrix = System.Collections.Generic.List<System.Collections.Generic.List<NonlinearMethods.FunctionDelegate>>;
 
 namespace Lab1 {
 	enum Tasks { 
@@ -150,7 +146,6 @@ namespace Lab1 {
 
             io.WriteLine($"cond(A) = {A.EuclideCondition}");
             io.WriteLine("Theoretical number of iterations:");
-            //io.WriteLine($"Simple iteration & Fastest Gradient Descent methods = {sim.Theoretical}");
             io.WriteLine($"SOR method = {sor.Theoretical}");
             io.WriteLine($"Conjugate Gradient method = {cgm.Theoretical}");
 
@@ -158,39 +153,42 @@ namespace Lab1 {
         }
         static void NonlinearMethods() {
             io.FileOpen();
+			double eps = 1E-4;
 
-            Vector X = new Vector(2);
-			X[0] = 0.9;
-			X[1] = 2.6;
-			NonlinearMethods.NM nm = new NonlinearMethods.NM(X, io);
+			IFunctions f1 = new _F1_28();
+			IFunctions f2 = new _F2_28();
+			IFunctions fi1 = new _Fi1_28();
+			IFunctions fi2 = new _Fi2_28();
+			IFunctions f = new _F_28();
 
-            double eps = 1E-4;
+			Vector X = new Vector(2);
+			X[0] = 0.365;
+			X[1] = 0.621;
 
-            //NonlinearMethods.SIM sim = new NonlinearMethods.SIM(nm.Answer, v);
+			io.WriteLine("Newton's method");
+			io.WriteLine();
 
-            IFunctions f1 = new F1();
-			IFunctions f2 = new F2();
-			IFunctions f = new F();
+			IFunctions[] NMFuncs = { f1, f2 };
 
-			FunctionVector functions = new FunctionVector();
-            functions.Add(f1.Evaluate);
-			functions.Add(f2.Evaluate);
+			NonlinearMethods.NM nm = new NonlinearMethods.NM(X, io, NMFuncs);
 
-            FunctionMatrix derivatives = new FunctionMatrix();
-            FunctionVector derivativesF1 = new FunctionVector();
-            derivativesF1.Add(f1.EvaluateDerivativeX);
-			derivativesF1.Add(f1.EvaluateDerivativeY);
-			FunctionVector derivativesF2 = new FunctionVector();
-			derivativesF2.Add(f2.EvaluateDerivativeX);
-			derivativesF2.Add(f2.EvaluateDerivativeY);
-            derivatives.Add(derivativesF1);
-			derivatives.Add(derivativesF2);
+			io.SeparateText();
+
+			io.WriteLine("Simple Iteration method");
+            io.WriteLine();
+
+			IFunctions[] SIMFuncs = { f1, f2, fi1, fi2 };
+
+            NonlinearMethods.SIM sim = new NonlinearMethods.SIM(nm.Answer, X, io, eps, SIMFuncs);			
 
             io.SeparateText();
 
             io.WriteLine("Gradient Descend Method");
+			io.WriteLine();
 
-            GD gd = new GD(X, nm.Answer, functions, f, derivatives, 1.0, 0.5, eps, io);
+			IFunctions[] GDFuncs = { f1, f2, f };
+
+            GD gd = new GD(X, nm.Answer, GDFuncs, 1.0, 0.5, eps, io);
 
 			io.SeparateText();
 		}

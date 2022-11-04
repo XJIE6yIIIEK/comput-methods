@@ -14,19 +14,26 @@ namespace NonlinearMethods {
         Vector startVector;						// вектор начальных значений
         Vector curVector;						// текущее значение вектора
         Vector prevVector;						// предыдущее значение вектора
-		IFunctions Fi1 = new Fi1();				// первое уравнение системы Fi
-		IFunctions Fi2 = new Fi2();				// второе уравнение системы Fi
-		IFunctions F1 = new F1();				// первое уравнение системы F
-		IFunctions F2 = new F2();				// второе уравнение системы F
+		IFunctions Fi1;							// первое уравнение системы Fi
+		IFunctions Fi2;							// второе уравнение системы Fi
+		IFunctions F1;							// первое уравнение системы F
+		IFunctions F2;							// второе уравнение системы F
 		Matrix jacobian = new Matrix(2, 2);		// якобиан
 		Vector Fi = new Vector(2);				// система Fi
 		double errResNorm;                      // норма невязки
 		double errEst;
-		public SIM(Vector solution, Vector startVector, IOModule io, double E) { // конструктор
+
+		public SIM(Vector solution, Vector startVector, IOModule io, double E, IFunctions[] functions) { // конструктор
 			this.io = io;
 			this.NMsolution = solution;
 			this.startVector = startVector;
 			prevVector = startVector;
+
+			F1 = functions[0];
+			F2 = functions[1];
+			Fi1 = functions[2];
+			Fi2 = functions[3];
+
 			SimpleIterationMethod(E);
 		}
 		private Matrix GetJacobian(Vector X) { // получить пересчитанный якобиан

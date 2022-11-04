@@ -13,18 +13,22 @@ namespace NonlinearMethods {
         Vector curVector;                   // текущее значение вектора
         Vector prevVector;                  // предыдущее значение вектора
         Vector startVector;                 // стартовое значение вектора 
-        IFunctions F1 = new F1();           // первое уравнение системы F
-        IFunctions F2 = new F2();           // второе уравнение системы F
-        Matrix derivF = new Matrix(2, 2);    // матрица производных
+        IFunctions F1;                      // первое уравнение системы F
+        IFunctions F2;                      // второе уравнение системы F
+        Matrix derivF = new Matrix(2, 2);   // матрица производных
         Vector F = new Vector(2);           // решение системы F
 
         public Vector Answer{ // получить ответ
             get { return curVector; }
         }
-        public NM(Vector startVector, IOModule io) {  // конструктор
+        public NM(Vector startVector, IOModule io, IFunctions[] functions) {  // конструктор
             this.io = io;
             this.prevVector = startVector;
             this.startVector = startVector;
+
+            F1 = functions[0];
+            F2 = functions[1];
+
             NewtonMethod();
         } 
         private void FillDerivF(Vector X) { // заполнение матрицы производных

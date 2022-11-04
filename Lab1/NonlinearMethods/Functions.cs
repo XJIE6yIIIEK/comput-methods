@@ -87,9 +87,9 @@ namespace NonlinearMethods {
         }
     }
 
-	class _Fi1 : IFunctions {
+	class _Fi2_2 : IFunctions {
 		public double EvaluateDerivativeX(Vector X) {
-			return Math.Cos(X[0] + 1);
+			return Math.Sin(X[0] - 1);
 		}
 
 		public double EvaluateDerivativeY(Vector X) {
@@ -97,41 +97,13 @@ namespace NonlinearMethods {
 		}
 
 		public double Evaluate(Vector X) {
-            return Math.Sin(X[0] + 1) - 2.2;
+            return 0.5 - Math.Cos(X[0] - 1);
 		}
 	}
 
-	class _Fi2 : IFunctions {
+	class _Fi1_2 : IFunctions {
 		public double EvaluateDerivativeX(Vector X) {
 			return 0;
-		}
-
-		public double EvaluateDerivativeY(Vector X) {
-			return Math.Sin(X[1]) / 2;
-		}
-
-		public double Evaluate(Vector X) {
-			return 1 - Math.Cos(X[1]) / 2;
-		}
-	}
-
-	class _F1 : IFunctions {
-		public double EvaluateDerivativeX(Vector X) {
-            return Math.Cos(X[0] + 1);
-		}
-
-		public double EvaluateDerivativeY(Vector X) {
-			return 1;
-		}
-
-		public double Evaluate(Vector X) {
-            return Math.Sin(X[0] + 1) - X[1] - 2.2;
-		}
-	}
-
-	class _F2 : IFunctions {
-		public double EvaluateDerivativeX(Vector X) {
-			return 2;
 		}
 
 		public double EvaluateDerivativeY(Vector X) {
@@ -139,21 +111,119 @@ namespace NonlinearMethods {
 		}
 
 		public double Evaluate(Vector X) {
-			return 2 * X[0] + Math.Cos(X[1]) - 2;
+			return 3 + Math.Cos(X[1]);
 		}
 	}
 
-	class _F : IFunctions {
+	class _F1_2 : IFunctions {
 		public double EvaluateDerivativeX(Vector X) {
-            return 4 * (2 * X[0] + Math.Cos(X[1]) - 2) + 2 * Math.Cos(X[0] + 1) * (Math.Sin(X[0] + 1) - X[1] - 2.2);
+            return -Math.Sin(X[0] - 1);
 		}
 
 		public double EvaluateDerivativeY(Vector X) {
-            return -2 * (Math.Sin(X[0] + 1) - X[1] - 2.2) - 2 * Math.Sin(X[1]) * (2 * X[0] + Math.Cos(X[1]) - 2.0);
+			return 1;
 		}
 
 		public double Evaluate(Vector X) {
-			return Math.Pow(2 * X[0] + Math.Cos(X[1]) - 2, 2) + Math.Pow(Math.Sin(X[0] + 1) - X[1] - 2.2, 2);
+            return X[1] + Math.Cos(X[0] - 1) - 0.5;
+		}
+	}
+
+	class _F2_2 : IFunctions {
+		public double EvaluateDerivativeX(Vector X) {
+			return 1;
+		}
+
+		public double EvaluateDerivativeY(Vector X) {
+			return Math.Sin(X[1]);
+		}
+
+		public double Evaluate(Vector X) {
+			return X[0] - Math.Cos(X[1]) - 3;
+		}
+	}
+
+	class _F_2 : IFunctions {
+		public double EvaluateDerivativeX(Vector X) {
+            return 2 * (X[1] + Math.Cos(X[0] - 1) - 0.5) * (-Math.Sin(X[0] - 1)) + 2 * (X[0] - Math.Cos(X[1]) - 3);
+		}
+
+		public double EvaluateDerivativeY(Vector X) {
+            return 2 * (X[1] + Math.Cos(X[0] - 1) - 0.5) + 2 * (X[0] - Math.Cos(X[1]) - 3) * Math.Sin(X[1]);
+		}
+
+		public double Evaluate(Vector X) {
+			return Math.Pow(X[1] + Math.Cos(X[0] - 1) - 0.5, 2) + Math.Pow(X[0] - Math.Cos(X[1]) - 3, 2);
+		}
+	}
+
+	class _Fi1_28 : IFunctions {
+		public double EvaluateDerivativeX(Vector X) {
+			return 0;
+		}
+
+		public double EvaluateDerivativeY(Vector X) {
+			return Math.Sin(X[1] + 0.5);
+		}
+
+		public double Evaluate(Vector X) {
+			return 0.8 - Math.Cos(X[1] + 0.5);
+		}
+	}
+
+	class _Fi2_28 : IFunctions {
+		public double EvaluateDerivativeX(Vector X) {
+			return -Math.Cos(X[0]) / 2;
+		}
+
+		public double EvaluateDerivativeY(Vector X) {
+			return 0;
+		}
+
+		public double Evaluate(Vector X) {
+			return 0.8 - Math.Sin(X[0]) / 2;
+		}
+	}
+
+	class _F1_28 : IFunctions {
+		public double EvaluateDerivativeX(Vector X) {
+			return 1;
+		}
+
+		public double EvaluateDerivativeY(Vector X) {
+			return -Math.Sin(X[1] + 0.5);
+		}
+
+		public double Evaluate(Vector X) {
+			return Math.Cos(X[1] + 0.5) + X[0] - 0.8;
+		}
+	}
+
+	class _F2_28 : IFunctions {
+		public double EvaluateDerivativeX(Vector X) {
+			return Math.Cos(X[0]);
+		}
+
+		public double EvaluateDerivativeY(Vector X) {
+			return 2;
+		}
+
+		public double Evaluate(Vector X) {
+			return Math.Sin(X[0]) + 2 * X[1] - 1.6;
+		}
+	}
+
+	class _F_28 : IFunctions {
+		public double EvaluateDerivativeX(Vector X) {
+			return 2 * (Math.Cos(X[1] + 0.5) + X[0] - 0.8) + 2 * (Math.Sin(X[0]) + 2 * X[1] - 1.6) * (Math.Cos(X[0]));
+		}
+
+		public double EvaluateDerivativeY(Vector X) {
+			return 2 * (Math.Cos(X[1] + 0.5) + X[0] - 0.8) * (-Math.Sin(X[1] + 0.5)) + 4 * (Math.Sin(X[0]) + 2 * X[1] - 1.6);
+		}
+
+		public double Evaluate(Vector X) {
+			return Math.Pow(Math.Cos(X[1] + 0.5) + X[0] - 0.8, 2) + Math.Pow(Math.Sin(X[0]) + 2 * X[1] - 1.6, 2);
 		}
 	}
 }
