@@ -44,8 +44,10 @@ namespace NonlinearMethods {
             F[1] = F2.Evaluate(X);
         }
         private void NewtonMethod() {
-            int iter = 0; // текущая итерация 
-            WriteHead(); // вывод шапки
+            int iter = 0; // текущая итерация
+            double resNorm;
+
+			WriteHead(); // вывод шапки
             do {
                 FillDerivF(prevVector); // пересчитать значения матрицы производных
                 FillF(prevVector); // пересчитать значения F
@@ -56,21 +58,25 @@ namespace NonlinearMethods {
 
                 prevVector = curVector; // передать текущее значения в предыдущее для след итерации
 
-                double resNorm = F.Norm(); // норма
-                WriteStep(++iter, curVector, resNorm, F);
+                resNorm = F.Norm(); // норма
+
+                double err = (curVector - startVector).Norm();
+
+                WriteStep(++iter, curVector, resNorm, F, err);
             }
-            while(F.Norm() > 1E-12); // подсчет с точностью 10^-12
+            while(resNorm > 1E-12); // подсчет с точностью 10^-12
         } 
 
-        private void WriteStep(int iter, Vector X, double residualNorm, Vector F) { // печать шага итерации
+        private void WriteStep(int iter, Vector X, double residualNorm, Vector F, double err) { // печать шага итерации
             string iterStr = string.Format("{0,5}", iter);
             string x = io.PrettyfyDouble(X[0], 12);
             string y = io.PrettyfyDouble(X[1], 12);
             string resNorm = io.PrettyfyDouble(residualNorm, 12);
             string F1 = io.PrettyfyDouble(F[0], 12);
             string F2 = io.PrettyfyDouble(F[1], 12);
+			string _err = io.PrettyfyDouble(err, 12);
 
-            string str = $"| {iterStr} | {x} | {y} | {resNorm} | {F1} | {F2}";
+			string str = $"| {iterStr} | {x} | {y} | {resNorm} | {F1} | {F2} | {_err}";
 
             io.WriteLine(str);
         }
@@ -85,7 +91,7 @@ namespace NonlinearMethods {
 
             string head = $"|{centeredIter}|{centeredX}|{centeredY}|{centeredResNorm}|{centeredF1}|{centeredF2}";
 
-            Console.WriteLine(head);
+            io.WriteLine(head);
         }
 
     }

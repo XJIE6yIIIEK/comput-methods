@@ -7,14 +7,33 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace NonlinearMethods {
-    delegate double FunctionDelegate(Vector X);
+	//Делегат для методов классов, наследуемых от интерфейса IFunctions
+	delegate double FunctionDelegate(Vector X);
 
+	/// <summary>
+	/// Интерфей для функций
+	/// </summary>
     interface IFunctions {
+		/// <summary>
+		/// Частная проихводная функции по X
+		/// </summary>
+		/// <param name="X">Вектор значений</param>
+		/// <returns>Значение производной</returns>
         double EvaluateDerivativeX(Vector X);
 
-        double EvaluateDerivativeY(Vector X);
+		/// <summary>
+		/// Частная проихводная функции по Y
+		/// </summary>
+		/// <param name="X">Вектор значений</param>
+		/// <returns>Значение производной</returns>
+		double EvaluateDerivativeY(Vector X);
 
-        double Evaluate(Vector X);
+		/// <summary>
+		/// Значение функции
+		/// </summary>
+		/// <param name="X">Вектор значений</param>
+		/// <returns>Значение функции</returns>
+		double Evaluate(Vector X);
     }
 
     class F1 : IFunctions {

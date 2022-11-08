@@ -98,7 +98,7 @@ namespace NonlinearMethods {
 
 			string head = $"|{centeredIter}|{centeredX}|{centeredY}|{centeredResNorm}|{errEstimate}|{errNorm}|{jNorm}";
 
-			Console.WriteLine(head);
+			io.WriteLine(head);
 		}
 	}
 }

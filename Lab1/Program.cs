@@ -152,45 +152,71 @@ namespace Lab1 {
             io.FileClose();
         }
         static void NonlinearMethods() {
-            io.FileOpen();
-			double eps = 1E-4;
+            //Преднастройки
+            IFunctions[,] funcs = new IFunctions[3, 5] {
+                { new F1(), new F2(), new Fi1(), new Fi2(), new F() },
+				{ new _F1_28(), new _F2_28(), new _Fi1_28(), new _Fi2_28(), new _F_28() },
+				{ new _F1_2(), new _F2_2(), new _Fi1_2(), new _Fi2_2(), new _F_2() }
+			};
 
-			IFunctions f1 = new _F1_28();
-			IFunctions f2 = new _F2_28();
-			IFunctions fi1 = new _Fi1_28();
-			IFunctions fi2 = new _Fi2_28();
-			IFunctions f = new _F_28();
+            double[,] roughAns = {
+                { 0.9, 2.6 },
+				{ 0.365, 0.621 },
+				{ 3.356, 1.2069 }
+            };
 
-			Vector X = new Vector(2);
-			X[0] = 0.365;
-			X[1] = 0.621;
+            int length = funcs.GetUpperBound(0) + 1;
 
-			io.WriteLine("Newton's method");
-			io.WriteLine();
+			io.FileOpen();
 
-			IFunctions[] NMFuncs = { f1, f2 };
+			for(int i = 0; i < length; i++) {
+                io.WriteLine($"ПРИМЕР {i}");
 
-			NonlinearMethods.NM nm = new NonlinearMethods.NM(X, io, NMFuncs);
+                double eps = 1E-4;
+                double alpha = 1;
+                double lambda = 0.5;
 
-			io.SeparateText();
+                IFunctions f1 = funcs[i, 0];
+                IFunctions f2 = funcs[i, 1];
+                IFunctions fi1 = funcs[i, 2];
+                IFunctions fi2 = funcs[i, 3];
+                IFunctions f = funcs[i, 4];
 
-			io.WriteLine("Simple Iteration method");
-            io.WriteLine();
+                Vector X = new Vector(2);
+                X[0] = roughAns[i, 0];
+                X[1] = roughAns[i, 1];
 
-			IFunctions[] SIMFuncs = { f1, f2, fi1, fi2 };
+				io.WriteLine($"M0 = ({roughAns[i, 0]},{roughAns[i, 1]})");
+				io.WriteLine($"Alpha = {alpha}, Lambda = {lambda}");
+                io.SeparateText();
 
-            NonlinearMethods.SIM sim = new NonlinearMethods.SIM(nm.Answer, X, io, eps, SIMFuncs);			
+				io.WriteLine("Newton's method");
+                io.WriteLine();
 
-            io.SeparateText();
+                IFunctions[] NMFuncs = { f1, f2 };
 
-            io.WriteLine("Gradient Descend Method");
-			io.WriteLine();
+                NonlinearMethods.NM nm = new NonlinearMethods.NM(X, io, NMFuncs);
 
-			IFunctions[] GDFuncs = { f1, f2, f };
+                io.SeparateText();
 
-            GD gd = new GD(X, nm.Answer, GDFuncs, 1.0, 0.5, eps, io);
+                io.WriteLine("Simple Iteration method");
+                io.WriteLine();
 
-			io.SeparateText();
+                IFunctions[] SIMFuncs = { f1, f2, fi1, fi2 };
+
+                NonlinearMethods.SIM sim = new NonlinearMethods.SIM(nm.Answer, X, io, eps, SIMFuncs);
+
+                io.SeparateText();
+
+                io.WriteLine("Gradient Descend Method");
+                io.WriteLine();
+
+                IFunctions[] GDFuncs = { f1, f2, f };
+
+                GD gd = new GD(X, nm.Answer, GDFuncs, alpha, lambda, eps, io);
+
+                io.SeparateText();
+            }
 		}
 
         static void TaskSwitch(int task) {

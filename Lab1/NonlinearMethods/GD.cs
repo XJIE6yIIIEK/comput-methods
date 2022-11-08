@@ -106,12 +106,12 @@ namespace NonlinearMethods {
 			string centeredY = io.CenterString("y", 14);
 			string centAlpha = io.CenterString("Alpha", 14);
 			string centeredResNorm = io.CenterString("Residual Norm", 14);
-			string centeredErrEst = io.CenterString("Error Estimate", 14);
+			string centeredErrEst = io.CenterString("Error norm", 14);
 			string ceneteredK = io.CenterString("K", 7);
 
 			string head = $"|{centeredIter}|{centeredX}|{centeredY}|{centAlpha}|{centeredResNorm}|{centeredErrEst}|{ceneteredK}";
 
-			Console.WriteLine(head);
+			io.WriteLine(head);
 		}
 	}
 }
