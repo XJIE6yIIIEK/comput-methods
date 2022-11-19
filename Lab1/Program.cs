@@ -2,12 +2,14 @@
 using Matrices;
 using Vectors;
 using NonlinearMethods;
+using System.Collections.Generic;
 
 namespace Lab1 {
 	enum Tasks { 
 		StraightMethods = 1,
 		IterativeMethods = 2,
-        NonlinearMethods = 3
+        NonlinearMethods = 3,
+        ApproximationMethods = 4
 	}
 
     class Program {
@@ -160,9 +162,9 @@ namespace Lab1 {
 			};
 
             double[,] roughAns = {
-                { 0.9, 2.6 },
-				{ 0.365, 0.621 },
-				{ 3.356, 1.2069 }
+                { 0.5, -0.2 },
+				{ 0.4, 0.6 },
+				{ 3.4, 1.2   }
             };
 
             int length = funcs.GetUpperBound(0) + 1;
@@ -219,6 +221,15 @@ namespace Lab1 {
             }
 		}
 
+        static void ApproximationMethods() {
+            const int a = 1;
+            const int b = 2;
+            const int n = 5;
+
+            io.FileOpen();
+            io.WriteLine("Newton method");
+            ApproximationTheory.NewtonMethod nm = new ApproximationTheory.NewtonMethod(a, b, n, io);
+        }
         static void TaskSwitch(int task) {
             switch ((Tasks)task) {
                 case Tasks.StraightMethods: {
@@ -232,7 +243,11 @@ namespace Lab1 {
                 case Tasks.NonlinearMethods: {
                     NonlinearMethods();
                 } break;
-                
+
+                case Tasks.ApproximationMethods: {
+                    ApproximationMethods();
+				} break;
+
                 default: {
                         Console.WriteLine("Wrong program");
                     } break;
@@ -246,6 +261,7 @@ namespace Lab1 {
             Console.WriteLine("1 - Straight Methods (Lab 1)");
             Console.WriteLine("2 - Iterative Methods (Lab 2)");
             Console.WriteLine("3 - Nonlinear Methods (Lab3)");
+            Console.WriteLine("4 - Approximation Methods (Lab4)");
             Console.Write("Enter number: ");
 
             Console.WriteLine();
