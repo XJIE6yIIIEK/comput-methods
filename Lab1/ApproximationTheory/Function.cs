@@ -17,6 +17,17 @@ namespace ApproximationTheory {
 		public double FunctionValue(double x) {
 			return Math.Pow(3, x) + 5 * x - 2;
 		}
+
+		public double DerivFuntionValue(double x) {
+			return Math.Pow(3, x) * Math.Log(3) + 5;
+		}
+
+		public double FourthDerivFunctionValue(double x) {
+			return Math.Pow(3, x) * Math.Pow(Math.Log(3), 4);
+		}
+		public double FifthDerivFunctionValue(double x) {
+			return Math.Pow(3, x) * Math.Pow(Math.Log(3), 5); 
+		}
 		public Vector GetVectorX() {
 			Vector v = new Vector(n + 1);
 			double h = 1.0 * (b - a) / n;
@@ -29,6 +40,14 @@ namespace ApproximationTheory {
 			Vector v = new Vector(X.Length);
 			for(int i = 0; i < X.Length; i++) {
 				v[i] = FunctionValue(X[i]);
+			}
+			return v;
+		}
+
+		public Vector GetVectorDerivF(Vector X) {
+			Vector v = new Vector(X.Length);
+			for(int i = 0; i < X.Length; i++) {
+				v[i] = DerivFuntionValue(X[i]);
 			}
 			return v;
 		}

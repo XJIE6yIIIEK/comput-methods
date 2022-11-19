@@ -31,7 +31,7 @@ namespace ApproximationTheory {
 			io.WriteLine("---------");
 
 			WriteHead();
-			for(int i = 0; i < 5; i++) {
+			for(int i = 0; i < n; i++) {
 				double x = 1 + (i + 0.5) * 0.2;
 				double f = func.FunctionValue(x);
 				double pn = evalPolValue(x);
