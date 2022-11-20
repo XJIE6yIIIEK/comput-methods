@@ -229,6 +229,14 @@ namespace Lab1 {
             io.FileOpen();
             io.WriteLine("Newton method");
             ApproximationTheory.NewtonMethod nm = new ApproximationTheory.NewtonMethod(a, b, n, io);
+            io.WriteLine("\n");
+
+            io.WriteLine("CubicSplines:");
+            ApproximationTheory.CubicSplinesMethod csm = new ApproximationTheory.CubicSplinesMethod(a, b, n, io);
+
+            io.WriteLine("Discrete RMS Approximation");
+            ApproximationTheory.DRMSA drmsa = new ApproximationTheory.DRMSA(a, b, n, io);
+            Console.WriteLine(drmsa.getPolConsts().ToString());
         }
         static void TaskSwitch(int task) {
             switch ((Tasks)task) {

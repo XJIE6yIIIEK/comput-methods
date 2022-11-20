@@ -37,7 +37,7 @@ namespace Methods {
 		/// <param name="ioModule">Модкль ввода-вывода</param>
 		public LU(Matrix _A, Vector _B, int n, IOModule ioModule) {
 			extIOModule = ioModule;
-			ioModule.WriteLine("LUP-decomposition");
+			//ioModule.WriteLine("LUP-decomposition");
 
 			this.n = n;
 
@@ -68,7 +68,7 @@ namespace Methods {
 				if(maxDiagVal < 1E-6)
 					rang = k;
 
-				ioModule.WriteLine($"k={k + 1}, m={m0 + 1}");
+				//ioModule.WriteLine($"k={k + 1}, m={m0 + 1}");
 
 				//Выполнение перестановки строк в матрицах U, A, B, P,
 				//если опорный элемент не на главной диагонали
@@ -80,8 +80,8 @@ namespace Methods {
 
 					permutNumber += 1;
 
-					ioModule.WriteLine("P=", 1);
-					ioModule.WriteLine(P.ToString(), 2);
+					//io.WriteLine("P=", 1);
+					//ioModule.WriteLine(P.ToString(), 2);
 				}
 
 				//Преобразование методом Гаусса
@@ -110,10 +110,10 @@ namespace Methods {
 					L[k, j] -= c;
 				}
 
-				ioModule.WriteLine("U=", 1);
-				ioModule.WriteLine(U.ToString(), 2);
-				ioModule.WriteLine("L=", 1);
-				ioModule.WriteLine(L.ToString(), 2);
+				//ioModule.WriteLine("U=", 1);
+				//ioModule.WriteLine(U.ToString(), 2);
+				//ioModule.WriteLine("L=", 1);
+				//ioModule.WriteLine(L.ToString(), 2);
 			}
 
 			if(rang == null)
@@ -123,12 +123,12 @@ namespace Methods {
 
 			Vector pVal = Vector.GetFromArray(m, n);
 
-			ioModule.SeparateText();
-			ioModule.WriteLine("P Vector=");
-			ioModule.WriteLine(pVal.ToString(), 1);
-			ioModule.WriteLine();
-			ioModule.WriteLine($"Rank = {rang}");
-			ioModule.SeparateText();
+			//ioModule.SeparateText();
+			//ioModule.WriteLine("P Vector=");
+			//ioModule.WriteLine(pVal.ToString(), 1);
+			//ioModule.WriteLine();
+			//ioModule.WriteLine($"Rank = {rang}");
+			//ioModule.SeparateText();
 		}
 
 		/// <summary>
@@ -141,7 +141,7 @@ namespace Methods {
 			double max = double.MinValue;
 			int ind = -1;
 
-			for(int i = 0; i < n; i++) {
+			for(int i = j; i < n; i++) {
 				if(Math.Abs(U[i, j]) > max) {
 					max = Math.Abs(U[i, j]);
 					ind = i;
