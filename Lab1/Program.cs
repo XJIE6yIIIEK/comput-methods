@@ -233,10 +233,10 @@ namespace Lab1 {
 
             io.WriteLine("CubicSplines:");
             ApproximationTheory.CubicSplinesMethod csm = new ApproximationTheory.CubicSplinesMethod(a, b, n, io);
+            io.WriteLine("\n");
 
             io.WriteLine("Discrete RMS Approximation");
             ApproximationTheory.DRMSA drmsa = new ApproximationTheory.DRMSA(a, b, n, io);
-            Console.WriteLine(drmsa.getPolConsts().ToString());
         }
         static void TaskSwitch(int task) {
             switch ((Tasks)task) {
