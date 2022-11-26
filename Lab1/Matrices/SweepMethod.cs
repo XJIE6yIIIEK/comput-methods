@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Vectors;
 
-namespace Lab1.Matrices {
+namespace Matrices {
 	class SweepMethod {
 		Vector answer;
 		public Vector Answer {

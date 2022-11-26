@@ -93,6 +93,5 @@ namespace NonlinearMethods {
 
             io.WriteLine(head);
         }
-
     }
 }

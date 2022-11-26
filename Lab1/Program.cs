@@ -3,6 +3,7 @@ using Matrices;
 using Vectors;
 using NonlinearMethods;
 using System.Collections.Generic;
+using ApproximationTheory;
 
 namespace Lab1 {
 	enum Tasks { 
@@ -226,6 +227,8 @@ namespace Lab1 {
             const int b = 2;
             const int n = 5;
 
+            IFunction func = new F_2();
+
             io.FileOpen();
             io.WriteLine("Newton method");
             ApproximationTheory.NewtonMethod nm = new ApproximationTheory.NewtonMethod(a, b, n, io);
@@ -237,7 +240,15 @@ namespace Lab1 {
             io.WriteLine("Discrete RMS Approximation");
             ApproximationTheory.DRMSA drmsa = new ApproximationTheory.DRMSA(a, b, n, io);
             Console.WriteLine(drmsa.getPolConsts().ToString());
+
+            io.WriteLine("Uniform approximation");
+            ApproximationTheory.UniformApproximationP2 uniform = new ApproximationTheory.UniformApproximationP2(func, a, b, n, io);
+            io.SeparateText();
+
+            io.WriteLine($"Reverse Root");
+            ApproximationTheory.ReverseRootMethod reverse = new ApproximationTheory.ReverseRootMethod(func, a, b, (func.Solve(a) + func.Solve(b)) / 2, n, io);
         }
+
         static void TaskSwitch(int task) {
             switch ((Tasks)task) {
                 case Tasks.StraightMethods: {

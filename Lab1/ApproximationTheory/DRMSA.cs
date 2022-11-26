@@ -12,12 +12,14 @@ namespace ApproximationTheory {
 	class DRMSA {
 		Vector F, X;
 		IOModule io;
+
 		public DRMSA(int a, int b, int n, IOModule io) {
 			this.io = io;
 			Function func = new Function(a, b, n);
 			this.X = func.GetVectorX();
 			this.F = func.GetVectorF(X);
 		}
+
 		public Vector getPolConsts() {
 			Matrix A = new Matrix(3, 3);
 			Vector B = new Vector(3);

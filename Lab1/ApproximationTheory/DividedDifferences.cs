@@ -8,9 +8,11 @@ using Vectors;
 namespace ApproximationTheory {
 	class DividedDifferences {
 		Vector X;
+
 		public DividedDifferences(Vector X) {
 			this.X = X;
 		}
+
 		public List<Vector> GetDiffsList(Vector F) {
 			List<Vector> listDiffs = new List<Vector>();
 			listDiffs.Add(F);

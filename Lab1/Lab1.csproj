@@ -43,9 +43,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApproximationTheory\Basis.cs" />
+    <Compile Include="ApproximationTheory\CubicSplinesMethod.cs" />
+    <Compile Include="ApproximationTheory\DividedDifferences.cs" />
+    <Compile Include="ApproximationTheory\DRMSA.cs" />
+    <Compile Include="ApproximationTheory\Function.cs" />
+    <Compile Include="ApproximationTheory\NewtonMethod.cs" />
+    <Compile Include="ApproximationTheory\ReverseRootMethod.cs" />
+    <Compile Include="ApproximationTheory\UniformApproximation.cs" />
     <Compile Include="IOModule.cs" />
     <Compile Include="Matrices\L.cs" />
     <Compile Include="Matrices\Matrix.cs" />
+    <Compile Include="Matrices\SweepMethod.cs" />
     <Compile Include="Matrices\U.cs" />
     <Compile Include="Matrices\Vector.cs" />
     <Compile Include="Methods\CGM.cs" />
