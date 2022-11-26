@@ -227,21 +227,21 @@ namespace Lab1 {
             const int b = 2;
             const int n = 5;
 
-            IFunction func = new F_2();
+            IFunction func = new F_30();
 
-            io.FileOpen();
-            io.WriteLine("Newton method");
-            ApproximationTheory.NewtonMethod nm = new ApproximationTheory.NewtonMethod(a, b, n, io);
-            io.WriteLine("\n");
+			io.FileOpen();
+			io.WriteLine("Newton method");
+			ApproximationTheory.NewtonMethod nm = new ApproximationTheory.NewtonMethod(a, b, n, io);
+			io.WriteLine("\n");
 
-            io.WriteLine("CubicSplines:");
-            ApproximationTheory.CubicSplinesMethod csm = new ApproximationTheory.CubicSplinesMethod(a, b, n, io);
+			io.WriteLine("CubicSplines:");
+			ApproximationTheory.CubicSplinesMethod csm = new ApproximationTheory.CubicSplinesMethod(a, b, n, io);
+			io.WriteLine("\n");
 
-            io.WriteLine("Discrete RMS Approximation");
-            ApproximationTheory.DRMSA drmsa = new ApproximationTheory.DRMSA(a, b, n, io);
-            Console.WriteLine(drmsa.getPolConsts().ToString());
+			io.WriteLine("Discrete RMS Approximation");
+			ApproximationTheory.DRMSA drmsa = new ApproximationTheory.DRMSA(a, b, n, io);
 
-            io.WriteLine("Uniform approximation");
+			io.WriteLine("Uniform approximation");
             ApproximationTheory.UniformApproximationP2 uniform = new ApproximationTheory.UniformApproximationP2(func, a, b, n, io);
             io.SeparateText();
 
