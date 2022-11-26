@@ -13,7 +13,6 @@ namespace ApproximationTheory {
 		IFunction func;
 		Vector X;
 		Matrix dt;
-		IOModule io;
 		double answer;
 
 		public double Answer {
@@ -24,7 +23,6 @@ namespace ApproximationTheory {
 
 		public ReverseRootMethod(IFunction func, double a, double b, double y, int n, IOModule io) {
 			this.func = func;
-			this.io = io;
 
 			double step = (b - a) / n;
 			X = new Vector(n + 1);
@@ -38,12 +36,12 @@ namespace ApproximationTheory {
 			io.WriteLine($"Difference table");
 			io.WriteLine(dt.ToString());
 			io.WriteLine();
-			io.WriteLine($"c = {y}");
+			io.WriteLine($"c = {io.PrettyfyDouble(y, 6)}");
 
 
 			CalculatePolynom(y, y, n + 1);
 
-			io.WriteLine($"Root = {answer}");
+			io.WriteLine($"Root = {io.PrettyfyDouble(answer, 6)}");
 
 			double residual = func.Solve(answer) - y;
 

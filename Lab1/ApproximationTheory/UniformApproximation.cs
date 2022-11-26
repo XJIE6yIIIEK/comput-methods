@@ -26,11 +26,11 @@ namespace ApproximationTheory {
 			double Ld = func.Solve(d) - (a0 + a1 * d);
 			double Lb = func.Solve(b) - (a0 + a1 * b);
 
-			io.WriteLine($"P1(x) = {a0} + ({a1}) * x");
-			io.WriteLine($"d = {d}");
-			io.WriteLine($"L(a) = {La}");
-			io.WriteLine($"L(d) = {Ld}");
-			io.WriteLine($"L(b) = {Lb}");
+			io.WriteLine($"P1(x) = {io.PrettyfyDouble(a0, 6)} + ({a1}) * x");
+			io.WriteLine($"d = {io.PrettyfyDouble(d, 6)}");
+			io.WriteLine($"L(a) = {io.PrettyfyDouble(La, 6)}");
+			io.WriteLine($"L(d) = {io.PrettyfyDouble(Ld, 6)}");
+			io.WriteLine($"L(b) = {io.PrettyfyDouble(Lb, 6)}");
 			io.WriteLine();
 
 			WriteHead();
