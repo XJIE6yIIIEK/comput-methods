@@ -51,6 +51,8 @@
     <Compile Include="ApproximationTheory\NewtonMethod.cs" />
     <Compile Include="ApproximationTheory\ReverseRootMethod.cs" />
     <Compile Include="ApproximationTheory\UniformApproximation.cs" />
+    <Compile Include="Integration\Gauss.cs" />
+    <Compile Include="Integration\SimpsonIntegration.cs" />
     <Compile Include="IOModule.cs" />
     <Compile Include="Matrices\L.cs" />
     <Compile Include="Matrices\Matrix.cs" />
@@ -102,5 +104,6 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

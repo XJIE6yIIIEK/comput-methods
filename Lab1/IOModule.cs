@@ -181,11 +181,17 @@ namespace Lab1 {
 			Console.WriteLine(sep);
 		}
 
-		public string PrettyfyDouble(double num, int count) {
+		public string PrettyfyDouble(double num, int count, int decimalCount = 6) {
+			string decStr = "";
+
+			for(int i = 0; i < decimalCount - 3; i++) {
+				decStr += '0';
+			}
+
 			if(Math.Abs(num) > 0.0000001) {
-				return string.Format("{0," + count + ":0.000000;-0.000000;0}", num);
+				return string.Format("{0," + count + ":0." + decStr + "000;-0." + decStr + "000;0}", num);
 			} else {
-				return string.Format("{0," + count + ":0.0000E0;-0.0000E0;0}", num);
+				return string.Format("{0," + count + ":0." + decStr + "E0;-0." + decStr + "E0;0}", num);
 			}
 		}
 

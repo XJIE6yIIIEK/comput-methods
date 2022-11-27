@@ -4,13 +4,15 @@ using Vectors;
 using NonlinearMethods;
 using System.Collections.Generic;
 using ApproximationTheory;
+using Integration;
 
 namespace Lab1 {
 	enum Tasks { 
 		StraightMethods = 1,
 		IterativeMethods = 2,
         NonlinearMethods = 3,
-        ApproximationMethods = 4
+        ApproximationMethods = 4,
+        NumericalIntegration = 5
 	}
 
     class Program {
@@ -249,15 +251,30 @@ namespace Lab1 {
             ApproximationTheory.ReverseRootMethod reverse = new ApproximationTheory.ReverseRootMethod(func, a, b, (func.Solve(a) + func.Solve(b)) / 2, n, io);
         }
 
+        static void NumericalIntegration() {
+            double eps = 1E-08;
+            double exactVal = 10.96143535976104;
+            double a = 1;
+            double b = 2;
+
+            ApproximationTheory.IFunction func = new F_30();
+
+            io.FileOpen();
+            SimpsonIntegration simp = new SimpsonIntegration(func, exactVal, a, b, eps, io);
+            io.SeparateText();
+
+            Gauss gs = new Gauss(func, exactVal, a, b, eps, io);
+        }
+
         static void TaskSwitch(int task) {
             switch ((Tasks)task) {
                 case Tasks.StraightMethods: {
                         StraightMethods();
-                    } break;
+                } break;
 
                 case Tasks.IterativeMethods: {
                         IterativeMethods();
-                    } break;
+                } break;
 
                 case Tasks.NonlinearMethods: {
                     NonlinearMethods();
@@ -266,6 +283,10 @@ namespace Lab1 {
                 case Tasks.ApproximationMethods: {
                     ApproximationMethods();
 				} break;
+
+                case Tasks.NumericalIntegration: {
+                    NumericalIntegration();
+                } break;
 
                 default: {
                         Console.WriteLine("Wrong program");
@@ -281,7 +302,8 @@ namespace Lab1 {
             Console.WriteLine("2 - Iterative Methods (Lab 2)");
             Console.WriteLine("3 - Nonlinear Methods (Lab3)");
             Console.WriteLine("4 - Approximation Methods (Lab4)");
-            Console.Write("Enter number: ");
+			Console.WriteLine("5 - Numerical Integration (Lab5)");
+			Console.Write("Enter number: ");
 
             Console.WriteLine();
 
