@@ -229,26 +229,30 @@ namespace Lab1 {
             const int b = 2;
             const int n = 5;
 
-            IFunction func = new F_30();
+            IFunction func_30 = new F_30();
 
-			io.FileOpen();
-			io.WriteLine("Newton method");
-			ApproximationTheory.NewtonMethod nm = new ApproximationTheory.NewtonMethod(a, b, n, io);
-			io.WriteLine("\n");
+            io.FileOpen();
+            io.WriteLine("Newton method");
+            ApproximationTheory.NewtonMethod nm = new ApproximationTheory.NewtonMethod(func_30, a, b, n, io);
+            io.SeparateText();
 
-			io.WriteLine("CubicSplines:");
-			ApproximationTheory.CubicSplinesMethod csm = new ApproximationTheory.CubicSplinesMethod(a, b, n, io);
-			io.WriteLine("\n");
+            io.WriteLine("CubicSplines:");
+            ApproximationTheory.CubicSplinesMethod csm = new ApproximationTheory.CubicSplinesMethod(func_30, a, b, n, io);
+            io.SeparateText();
 
-			io.WriteLine("Discrete RMS Approximation");
-			ApproximationTheory.DRMSA drmsa = new ApproximationTheory.DRMSA(a, b, n, io);
+            io.WriteLine("Discrete RMS Approximation");
+            ApproximationTheory.DRMSA drmsa = new ApproximationTheory.DRMSA(func_30, a, b, n, io);
+            io.SeparateText();
 
-			io.WriteLine("Uniform approximation");
-            ApproximationTheory.UniformApproximationP2 uniform = new ApproximationTheory.UniformApproximationP2(func, a, b, n, io);
+            io.WriteLine("Continuous RMS Approximation");
+            ApproximationTheory.CRMSA crmsa = new ApproximationTheory.CRMSA(func_30, a, b, n, io);
+
+            io.WriteLine("Uniform approximation");
+            ApproximationTheory.UniformApproximationP2 uniform = new ApproximationTheory.UniformApproximationP2(func_30, a, b, n, io);
             io.SeparateText();
 
             io.WriteLine($"Reverse Root");
-            ApproximationTheory.ReverseRootMethod reverse = new ApproximationTheory.ReverseRootMethod(func, a, b, (func.Solve(a) + func.Solve(b)) / 2, n, io);
+            ApproximationTheory.ReverseRootMethod reverse = new ApproximationTheory.ReverseRootMethod(func_30, a, b, (func_30.Solve(a) + func_30.Solve(b)) / 2, n, io);
         }
 
         static void NumericalIntegration() {
@@ -257,13 +261,13 @@ namespace Lab1 {
             double a = 1;
             double b = 2;
 
-            ApproximationTheory.IFunction func = new F_30();
+            ApproximationTheory.IFunction func_30 = new F_30();
 
             io.FileOpen();
-            SimpsonIntegration simp = new SimpsonIntegration(func, exactVal, a, b, eps, io);
+            SimpsonIntegration simp = new SimpsonIntegration(func_30, exactVal, a, b, eps, io);
             io.SeparateText();
 
-            Gauss gs = new Gauss(func, exactVal, a, b, eps, io);
+            Gauss gs = new Gauss(func_30, exactVal, a, b, eps, io);
         }
 
         static void TaskSwitch(int task) {
