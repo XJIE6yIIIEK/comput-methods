@@ -1,4 +1,5 @@
 ﻿using Lab1;
+using Lab1.Matrices;
 using Matrices;
 using System;
 using System.Collections.Generic;
@@ -11,40 +12,53 @@ namespace ApproximationTheory {
 	class CubicSplinesMethod {
 		IOModule io; 
 		double h; // шаг сетки
-		Function func; // функция
+		IFunction func; // функция
 		Vector f; // значение функции 
 		Vector dF; // значение производной функции 
 		Vector m; // m[i]
 		Vector X; // узлы сетки
 		int n;
-		public CubicSplinesMethod(int a, int b, int n, IOModule io) {
+		public CubicSplinesMethod(IFunction func, int a, int b, int n, IOModule io) {
 			this.io = io;
 			h = 1.0 * (b - a) / n;
 			this.n = n;
+			this.func = func;
 
-			func = new Function(a, b, n);
-			X = func.GetVectorX();
-			f = func.GetVectorF(X);
-			dF = func.GetVectorDerivF(X);
+			//func = new Function(a, b, n);
+			X = new Vector(n + 1);
+			for(int i = 0; i < n + 1; i++) {
+				X[i] = a + h * i;
+			}
+
+			f = new Vector(n + 1);
+			for(int i = 0; i < n + 1; i++) {
+				f[i] = func.Solve(X[i]);
+			}
+
+			dF = new Vector(n + 1);
+			for(int i = 0; i < n + 1; i++) {
+				dF[i] = func.d1x(X[i]);
+			}
+
 			m = evalM(n);
 
 			int indM5 = 0; //агрумент максимума из значений производной 5го порядка по узлам сетки
 			for(int i = 0; i <= n; i++) { 
-				if(func.FifthDerivFunctionValue(X[i]) >
-					func.FifthDerivFunctionValue(X[indM5])){
+				if(func.d5x(X[i]) >
+					func.d5x(X[indM5])){
 					indM5 = i;
 				}
 			}
 
 			int indM4 = 0; // агрумент максимума из значений производной 4го порядка по узлам сетки
 			for(int i = 0; i <= n; i++) {
-				if(func.FourthDerivFunctionValue(X[i]) >
-					func.FourthDerivFunctionValue(X[indM4])) {
+				if(func.d4x(X[i]) >
+					func.d4x(X[indM4])) {
 					indM4 = i;
 				}
 			}
-			double M4 = func.FourthDerivFunctionValue(X[indM4]);
-			double M5 = func.FifthDerivFunctionValue(X[indM5]);
+			double M4 = func.d4x(X[indM4]);
+			double M5 = func.d5x(X[indM5]);
 			double estM = M5 * Math.Pow(0.2, 4) / 60; // погрешность
 			double estSpline = (M4 / 384 + M5 / 240 * h) *Math.Pow(h, 4); // погрешность
 
@@ -63,7 +77,7 @@ namespace ApproximationTheory {
 			WriteHeadF();
 			for(int i = 0; i < n; i++) {
 				double x = a + (i + 0.5) * h;
-				double f = func.FunctionValue(x);
+				double f = func.Solve(x);
 				double splineValue = evalSpline(x);
 				double delta = Math.Abs(f - splineValue);
 				WriteStep(x, f, splineValue, delta, estSpline);

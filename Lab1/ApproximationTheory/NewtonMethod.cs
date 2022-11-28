@@ -11,17 +11,24 @@ namespace ApproximationTheory {
 		Vector X; // сетка
 		List<Vector> dd; // таблица разделенных разностей
 		Vector F; // вектор значений функции в сетке
-		Function func; // функция
+		IFunction func; // функция
 		double h; // шаг для получения значений сетки
 		IOModule io; 
-		public NewtonMethod(int a, int b, int n, IOModule io) {
+		public NewtonMethod(IFunction func, int a, int b, int n, IOModule io) {
 			this.io = io;
+			this.func = func;
 
-			func = new Function(a,b,n); // a - начало сетки, b - конец сетки, n - число точек
-			h = (b - a) / n;
+			h = 1.0*(b - a) / n;
 
-			X = func.GetVectorX(); 
-			F = func.GetVectorF(X);
+			X = new Vector(n + 1);
+			for(int i = 0; i < n + 1; i++) {
+				X[i] = a + h * i;
+			}
+
+			F = new Vector(n + 1);
+			for(int i = 0; i < n + 1; i++) {
+				F[i] = func.Solve(X[i]);
+			}
 
 			DividedDifferences ddA = new DividedDifferences(X); // получение разделенных разностей
 			dd = ddA.GetDiffsList(F);
@@ -33,7 +40,7 @@ namespace ApproximationTheory {
 			WriteHead();
 			for(int i = 0; i < n; i++) {
 				double x = 1 + (i + 0.5) * 0.2;
-				double f = func.FunctionValue(x);
+				double f = func.Solve(x);
 				double pn = evalPolValue(x);
 				double delta = Math.Abs(f - pn);
 				double est = Math.Pow(3, x) * Math.Pow(Math.Log(3), 6) * Math.Abs(evalW(x, n+1)) / fact(n+1);

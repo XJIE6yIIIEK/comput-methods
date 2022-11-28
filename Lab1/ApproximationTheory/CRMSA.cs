@@ -9,23 +9,26 @@ using System.Threading.Tasks;
 using Vectors;
 
 namespace ApproximationTheory {
-	class DRMSA {
-		Vector F, X; // вектор значений функции и вектор значений аргументов
-		double h, a, b, n; // шаг, левая граница, правая граница, количество отрезков
-		IOModule io; 
-		Vector ans; // ответ
+	class CRMSA {
+		int a, b, n;
+		double h;
+		Vector F, X;
 		IFunction func;
+		Vector ans;
+		IOModule io;
 
 		public Vector Answer {
 			get { return ans; }
 		}
-
-		public DRMSA(IFunction func, int a, int b, int n, IOModule io) { // дискретная среднеквадратичная апроксимация
+		public CRMSA(IFunction func, int a, int b, int n, IOModule io) {
 			this.io = io;
-			h = 1.0*(b - a) / n;
-			this.n = n;
 			this.a = a;
 			this.b = b;
+			this.n = n;
+			this.h =  1.0 * (b - a) / n;
+			//Function func = new Function(a, b, n);
+			this.func = func;
+
 			X = new Vector(n + 1);
 			for(int i = 0; i < n + 1; i++) {
 				X[i] = a + h * i;
@@ -36,24 +39,20 @@ namespace ApproximationTheory {
 				F[i] = func.Solve(X[i]);
 			}
 
-			getPolConsts(); // получить константы полинома
+			getPolsConsts();
 		}
-		public void getPolConsts() {
+		private void getPolsConsts() {
 			Matrix A = new Matrix(3, 3);
 			Vector B = new Vector(3);
-			
-			for(int i = 0; i < X.Length; i++) { // подсчет матриц А и В
-				for(int j = 0; j < 3; j++) {
-					for(int k = j; k < 3; k++) {
-						A[j, k] += Basis.g(j + 1, X[i]) * Basis.g(k + 1, X[i]);
-						if (k != j)
-							A[k, j] += Basis.g(k + 1, X[i]) * Basis.g(j + 1, X[i]);
-					}
-				}
 
-				for(int j = 0; j < 3; j++) {
-					B[j] += F[i] * Basis.g(j + 1, X[i]);
-				}
+			for(int i = 1; i <= 3; i++) { // подсчет матриц А и В
+				for(int j = 1; j <= 3; j++) {
+					A[i - 1, j - 1] = func.GetIntegrGG(i, j, a, b);
+					}
+			}
+
+			for(int i = 1; i <= 3; i++) {
+				B[i - 1] = func.GetIntegrFG(i, a, b);
 			}
 
 			io.WriteLine("Matrix:");
@@ -61,7 +60,7 @@ namespace ApproximationTheory {
 			io.WriteLine("Vector: ");
 			io.WriteLine(B.ToString());
 
-			SSRM ssrm = new SSRM(A, B); // решение СЛАУ
+			SSRM ssrm = new SSRM(A, B);
 			ans = ssrm.Answer;
 
 			io.WriteLine($"P2(X) = ({ans[0]}) + ({ans[1]})*x + ({ans[2]})*x^2");
@@ -79,6 +78,7 @@ namespace ApproximationTheory {
 			io.WriteLine("Error Norm: " + Math.Sqrt(Math.Pow(F.Norm(), 2) - Math.Pow(g.Norm(), 2)).ToString());
 
 		}
+
 		private void WriteHead() { // печать шапки
 			string x = io.CenterString("X", 12);
 			string err = io.CenterString("Err", 12);
