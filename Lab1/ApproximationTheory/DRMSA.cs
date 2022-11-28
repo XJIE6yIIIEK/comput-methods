@@ -76,7 +76,7 @@ namespace ApproximationTheory {
 				WriteStep(x, g[i] - F[i]);
 			}
 
-			io.WriteLine("Error Norm: " + Math.Sqrt(Math.Pow(F.Norm(), 2) - Math.Pow(g.Norm(), 2)).ToString());
+			io.WriteLine("Error Norm: " + Math.Sqrt(Math.Abs(Math.Pow(F.Norm(), 2) - Math.Pow(g.Norm(), 2))).ToString());
 
 		}
 		private void WriteHead() { // печать шапки
