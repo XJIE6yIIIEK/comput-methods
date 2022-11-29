@@ -35,7 +35,8 @@ namespace ApproximationTheory {
 
 			io.WriteLine("Divided Differences Table:");
 			WriteDDTable();
-			io.WriteLine("---------");
+
+			io.WriteLine(" ");
 
 			WriteHead();
 			for(int i = 0; i < n; i++) {
@@ -47,7 +48,6 @@ namespace ApproximationTheory {
 				WriteStep(x, f, pn, delta, est);
 			}
 		}
-
 		private int fact(int n) { // факториал
 			if(n == 1)
 				return 1;

@@ -229,14 +229,14 @@ namespace Lab1 {
             const int b = 2;
             const int n = 5;
 
-            IFunction func_30 = new F_30();
+            IFunction func_30 = new F_2();
 
             io.FileOpen();
             io.WriteLine("Newton method");
             ApproximationTheory.NewtonMethod nm = new ApproximationTheory.NewtonMethod(func_30, a, b, n, io);
             io.SeparateText();
 
-            io.WriteLine("CubicSplines:");
+            io.WriteLine("CubicSplines");
             ApproximationTheory.CubicSplinesMethod csm = new ApproximationTheory.CubicSplinesMethod(func_30, a, b, n, io);
             io.SeparateText();
 
@@ -246,6 +246,7 @@ namespace Lab1 {
 
             io.WriteLine("Continuous RMS Approximation");
             ApproximationTheory.CRMSA crmsa = new ApproximationTheory.CRMSA(func_30, a, b, n, io);
+            io.SeparateText();
 
             io.WriteLine("Uniform approximation");
             ApproximationTheory.UniformApproximationP2 uniform = new ApproximationTheory.UniformApproximationP2(func_30, a, b, n, io);
@@ -264,9 +265,20 @@ namespace Lab1 {
             ApproximationTheory.IFunction func_30 = new F_30();
 
             io.FileOpen();
+
+            io.WriteLine("Trapezoid Formula");
+            Trapezoid tr = new Trapezoid(func_30, a, b, exactVal, eps, io);
+            io.SeparateText();
+
+            io.WriteLine("Approximated Trapezoid Formula");
+            TrapezoidSpline trs = new TrapezoidSpline(func_30, a, b, exactVal, eps, io);
+            io.SeparateText();
+
+            io.WriteLine("Simpson's Formula");
             SimpsonIntegration simp = new SimpsonIntegration(func_30, exactVal, a, b, eps, io);
             io.SeparateText();
 
+            io.WriteLine("Gauss Formula");
             Gauss gs = new Gauss(func_30, exactVal, a, b, eps, io);
         }
 

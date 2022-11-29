@@ -65,7 +65,7 @@ namespace ApproximationTheory {
 			ans = ssrm.Answer;
 
 			io.WriteLine($"P2(X) = ({ans[0]}) + ({ans[1]})*x + ({ans[2]})*x^2");
-			io.WriteLine("\n");
+			io.WriteLine(" ");
 
 			Vector g = new Vector(F.Length);
 

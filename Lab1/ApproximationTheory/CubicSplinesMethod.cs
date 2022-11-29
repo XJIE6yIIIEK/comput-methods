@@ -18,13 +18,15 @@ namespace ApproximationTheory {
 		Vector m; // m[i]
 		Vector X; // узлы сетки
 		int n;
-		public CubicSplinesMethod(IFunction func, int a, int b, int n, IOModule io) {
+		public Vector Answer {
+			get { return m; }
+		}
+		public CubicSplinesMethod(IFunction func, double a, double b, int n, IOModule io) {
 			this.io = io;
 			h = 1.0 * (b - a) / n;
 			this.n = n;
 			this.func = func;
 
-			//func = new Function(a, b, n);
 			X = new Vector(n + 1);
 			for(int i = 0; i < n + 1; i++) {
 				X[i] = a + h * i;
@@ -64,7 +66,7 @@ namespace ApproximationTheory {
 
 			io.WriteLine("M4: " + M4);
 			io.WriteLine("M5: " + M5);
-			io.WriteLine("\n");
+			io.WriteLine(" ");
 
 			WriteHeadM();
 
@@ -154,7 +156,6 @@ namespace ApproximationTheory {
 
 			io.WriteLine(head);
 		}
-
 		private void WriteHeadF() { // вывод шапки для f
 			string centeredX = io.CenterString("X[i]", 14);
 			string centeredF = io.CenterString("f(x)", 14);
