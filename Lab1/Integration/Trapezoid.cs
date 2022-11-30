@@ -19,6 +19,9 @@ namespace Integration {
 			double previousValue;
 			double currentValue = 0;
 			double nextValue = 0;
+			double leftFunc;
+			double rightFunc;
+			int counter;
 
 			WriteHead();
 
@@ -28,12 +31,19 @@ namespace Integration {
 				previousValue = currentValue;
 				currentValue = nextValue;
 
+				leftFunc = func.Solve(x1);
+				counter = 1;
+
 				nextValue = 0;
 				segmentWidth = 1.0 * (b - a) / segmentsNumber;
 
+
 				for(int i = 0; i < segmentsNumber; i++) {
 					x2 = x1 + segmentWidth;
-					nextValue += segmentWidth * (func.Solve(x1) + func.Solve(x2)) / 2;
+					rightFunc = func.Solve(x2);
+					counter++;
+					nextValue += segmentWidth * (leftFunc + rightFunc) / 2;
+					leftFunc = rightFunc;
 					x1 = x2;
 				}
 
@@ -57,6 +67,7 @@ namespace Integration {
 			}
 			while(err > eps);
 
+			io.WriteLine("Kобр = " + counter);
 
 		}
 		private double KValue(double prev, double cur, double next) {

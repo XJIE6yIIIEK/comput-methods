@@ -25,6 +25,7 @@ namespace Integration {
 			double error;
 			double estErr = 0;
 			double funcLeft = func.Solve(left);
+			int counter;
 
 			WriteHead();
 
@@ -36,6 +37,7 @@ namespace Integration {
 
 				nextValue = 0;
 				width = (right - left) / segmentsNumber;
+				counter = 1;
 
 				for(int step = 0; step < segmentsNumber; step++) {
 					double x2 = x1 + width;
@@ -43,6 +45,7 @@ namespace Integration {
 					nextValue += (x2 - x1) / 6 * (previousFuncValue + 4 * func.Solve(0.5 * (x1 + x2)) + newFuncValue);
 					previousFuncValue = newFuncValue;
 					x1 = x2;
+					counter += 2;
 				}
 
 				error = nextValue - exactVal;
@@ -61,6 +64,8 @@ namespace Integration {
 			} while(error > eps);
 
 			answer = currentValue;
+
+			io.WriteLine("Kобр = " + counter);
 		}
 
 		private double KValue(double prev, double cur, double next) {

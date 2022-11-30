@@ -24,6 +24,7 @@ namespace Integration {
 			double theta = 1.0 / 63;
 			double error;
 			double estErr = 0;
+			int counter = 0;
 
 			WriteHead();
 
@@ -40,6 +41,7 @@ namespace Integration {
 					nextValue += width / 2.0 * (func.Solve(x - width * Math.Sqrt(3.0 / 5) / 2.0) * (5 / 9.0) 
 						+ (8 / 9.0) * func.Solve(x) 
 						+ (5 / 9.0) * func.Solve(x + width * Math.Sqrt(3 / 5.0) / 2.0));
+					counter += 3;
 				}
 
 				error = nextValue - exactVal;
@@ -58,6 +60,8 @@ namespace Integration {
 			} while(error > eps || segmentsNumber <= 4);
 
 			answer = currentValue;
+
+			io.WriteLine("Kобр = " + counter);
 		}
 
 		private double KValue(double prev, double cur, double next) {

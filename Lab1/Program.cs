@@ -229,7 +229,7 @@ namespace Lab1 {
             const int b = 2;
             const int n = 5;
 
-            IFunction func_30 = new F_2();
+            IFunction func_30 = new F_28();
 
             io.FileOpen();
             io.WriteLine("Newton method");
@@ -258,13 +258,16 @@ namespace Lab1 {
 
         static void NumericalIntegration() {
             double eps = 1E-08;
-            double exactVal = 10.96143535976104;
+            double exactVal = 9.17077427047160499;
             double a = 1;
             double b = 2;
 
-            ApproximationTheory.IFunction func_30 = new F_30();
+            ApproximationTheory.IFunction func_30 = new F_2();
 
             io.FileOpen();
+
+            io.WriteLine("J = " + exactVal);
+            io.SeparateText();
 
             io.WriteLine("Trapezoid Formula");
             Trapezoid tr = new Trapezoid(func_30, a, b, exactVal, eps, io);

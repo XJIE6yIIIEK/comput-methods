@@ -21,6 +21,7 @@ namespace Integration {
 			double nextValue = 0;
 			double errEst = 0;
 			double theta = 1.0 / 15;
+			int counter;
 
 			WriteHead();
 
@@ -36,13 +37,15 @@ namespace Integration {
 					X[i] = a + i * segmentWidth;
 
 				nextValue += (func.Solve(X[0]) + func.Solve(X[segmentsNumber])) / 2.0;
-
+				counter = 2;
 
 				for(int i = 1; i < segmentsNumber; i++) {
 					nextValue += func.Solve(X[i]);
+					counter++;
 				}
 				nextValue *= segmentWidth;
 				nextValue += Math.Pow(segmentWidth, 2) / 12 * (func.d1x(X[0]) - func.d1x(X[segmentsNumber]));
+				counter += 2;
 
 				err = Math.Abs(nextValue - exactValue);
 
@@ -65,6 +68,7 @@ namespace Integration {
 			}
 			while(err > eps);
 
+			io.WriteLine("Kобр = " + counter);
 
 		}
 
