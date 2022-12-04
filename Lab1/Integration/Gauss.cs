@@ -44,7 +44,7 @@ namespace Integration {
 					counter += 3;
 				}
 
-				error = nextValue - exactVal;
+				error = Math.Abs(nextValue - exactVal);
 
 				if(segmentsNumber > 1) {
 					estErr = theta * (nextValue - currentValue);

@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Vectors;
+﻿using Vectors;
 using Matrices;
-using System.Security.Cryptography.X509Certificates;
 using Lab1;
 
 namespace ApproximationTheory {
 	internal class ReverseRootMethod {
-		IFunction func;
-		Vector X;
-		Matrix dt;
-		double answer;
+		IFunction func; //Функция
+		Vector X; //Узлы интерполяции
+		Matrix dt; //Таблица разностей
+		double answer; //Ответ
 
 		public double Answer {
 			get {
@@ -48,6 +42,11 @@ namespace ApproximationTheory {
 			io.WriteLine($"Residual = {residual}");
 		}
 
+		/// <summary>
+		/// Расчёт таблицы разностей
+		/// </summary>
+		/// <param name="c"></param>
+		/// <param name="n"></param>
 		void CalculateDT(double c, int n) {
 			dt = new Matrix(n, n + 1);
 
@@ -67,6 +66,12 @@ namespace ApproximationTheory {
 			}
 		}
 
+		/// <summary>
+		/// Вычисление значения полученного полинома от аргумента
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="c"></param>
+		/// <param name="n"></param>
 		void CalculatePolynom(double x, double c, int n) {
 			double px = dt[0, 1];
 

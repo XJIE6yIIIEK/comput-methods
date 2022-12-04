@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApproximationTheory\Basis.cs" />
+    <Compile Include="ApproximationTheory\CRMSA.cs" />
     <Compile Include="ApproximationTheory\CubicSplinesMethod.cs" />
     <Compile Include="ApproximationTheory\DividedDifferences.cs" />
     <Compile Include="ApproximationTheory\DRMSA.cs" />
@@ -53,6 +54,8 @@
     <Compile Include="ApproximationTheory\UniformApproximation.cs" />
     <Compile Include="Integration\Gauss.cs" />
     <Compile Include="Integration\SimpsonIntegration.cs" />
+    <Compile Include="Integration\Trapezoid.cs" />
+    <Compile Include="Integration\TrapezoidSpline.cs" />
     <Compile Include="IOModule.cs" />
     <Compile Include="Matrices\L.cs" />
     <Compile Include="Matrices\Matrix.cs" />

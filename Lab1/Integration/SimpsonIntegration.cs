@@ -13,6 +13,15 @@ namespace Integration {
 			}
 		}
 
+		/// <summary>
+		/// Метод Симпсона
+		/// </summary>
+		/// <param name="func"></param>
+		/// <param name="exactVal"></param>
+		/// <param name="left"></param>
+		/// <param name="right"></param>
+		/// <param name="eps"></param>
+		/// <param name="io"></param>
 		public SimpsonIntegration(IFunction func, double exactVal, double left, double right, double eps, IOModule io) {
 			this.io = io;
 

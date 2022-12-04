@@ -1,28 +1,59 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Vectors;
 
 namespace ApproximationTheory {
+	/// <summary>
+	/// Интерфейс функций
+	/// </summary>
 	interface IFunction {
+		/// <summary>
+		/// Вычисление значения функции от аргумента
+		/// </summary>
+		/// <param name="x"></param>
+		/// <returns></returns>
 		double Solve(double x);
-		double d1x(double x);
-		double d4x(double x);
-		double d5x(double x);
-		double GetIntegrFG(int g, int a, int b);
-		double GetIntegrGG(int g1, int g2, int a, int b);
-		double GetIntegrFG1(int a, int b);
-		double GetIntegrFG2(int a, int b);
-		double GetIntegrFG3(int a, int b);
-		double GetIntegrG1G1(int a, int b);
-		double GetIntegrG1G2(int a, int b);
-		double GetIntegrG1G3(int a, int b);
-		double GetIntegrG2G2(int a, int b);
-		double GetIntegrG2G3(int a, int b);
-		double GetIntegrG3G3(int a, int b);
 
+		/// <summary>
+		/// Первая производная
+		/// </summary>
+		/// <param name="x"></param>
+		/// <returns></returns>
+		double d1x(double x);
+
+		/// <summary>
+		/// Четвёртая производная
+		/// </summary>
+		/// <param name="x"></param>
+		/// <returns></returns>
+		double d4x(double x);
+
+		/// <summary>
+		/// Пятая производная
+		/// </summary>
+		/// <param name="x"></param>
+		/// <returns></returns>
+		double d5x(double x);
+
+		double GetIntegrFG(int g, int a, int b);
+
+		double GetIntegrGG(int g1, int g2, int a, int b);
+
+		double GetIntegrFG1(int a, int b);
+
+		double GetIntegrFG2(int a, int b);
+
+		double GetIntegrFG3(int a, int b);
+
+		double GetIntegrG1G1(int a, int b);
+
+		double GetIntegrG1G2(int a, int b);
+
+		double GetIntegrG1G3(int a, int b);
+
+		double GetIntegrG2G2(int a, int b);
+
+		double GetIntegrG2G3(int a, int b);
+
+		double GetIntegrG3G3(int a, int b);
 	}
 
 	class F_30 : IFunction {

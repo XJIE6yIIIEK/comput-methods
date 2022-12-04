@@ -258,11 +258,11 @@ namespace Lab1 {
 
         static void NumericalIntegration() {
             double eps = 1E-08;
-            double exactVal = 9.17077427047160499;
+            double exactVal = 7.46143535976102;
             double a = 1;
             double b = 2;
 
-            ApproximationTheory.IFunction func_30 = new F_2();
+            ApproximationTheory.IFunction func_30 = new F_28();
 
             io.FileOpen();
 
@@ -288,11 +288,11 @@ namespace Lab1 {
         static void TaskSwitch(int task) {
             switch ((Tasks)task) {
                 case Tasks.StraightMethods: {
-                        StraightMethods();
+                    StraightMethods();
                 } break;
 
                 case Tasks.IterativeMethods: {
-                        IterativeMethods();
+                    IterativeMethods();
                 } break;
 
                 case Tasks.NonlinearMethods: {
@@ -308,8 +308,8 @@ namespace Lab1 {
                 } break;
 
                 default: {
-                        Console.WriteLine("Wrong program");
-                    } break;
+                    Console.WriteLine("Wrong program");
+                } break;
             }
         }
 

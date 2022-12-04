@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Lab1;
-using Vectors;
 
 namespace ApproximationTheory {
 	internal class UniformApproximationP2 {
@@ -43,6 +38,14 @@ namespace ApproximationTheory {
 			}
 		}
 
+		/// <summary>
+		/// Метод половинного деления
+		/// </summary>
+		/// <param name="a1"></param>
+		/// <param name="a"></param>
+		/// <param name="b"></param>
+		/// <param name="eps"></param>
+		/// <returns></returns>
 		private double HalfDivideMethod(double a1, double a, double b, double eps) {
 			double c;
 
@@ -59,6 +62,11 @@ namespace ApproximationTheory {
 			return c;
 		}
 
+		/// <summary>
+		/// Вычисление полученного полинома первой степени
+		/// </summary>
+		/// <param name="x"></param>
+		/// <returns></returns>
 		public double Solve(double x) {
 			return a0 + a1 * x;
 		}
