@@ -5,6 +5,7 @@ using NonlinearMethods;
 using System.Collections.Generic;
 using ApproximationTheory;
 using Integration;
+using BoundaryValueProblem;
 
 namespace Lab1 {
 	enum Tasks { 
