@@ -12,8 +12,9 @@ namespace Lab1 {
 		IterativeMethods = 2,
         NonlinearMethods = 3,
         ApproximationMethods = 4,
-        NumericalIntegration = 5
-	}
+        NumericalIntegration = 5,
+        BoundaryValueProblem = 6
+    }
 
     class Program {
 
@@ -285,6 +286,25 @@ namespace Lab1 {
             Gauss gs = new Gauss(func_30, exactVal, a, b, eps, io);
         }
 
+        static void BoundaryValue() {
+            int var = 2;
+            ABC abc = new ABC2();
+            double eps = 1E-4;
+
+            io.FileOpen();
+
+            io.WriteLine("Figing Method");
+            FiringMethod fm = new FiringMethod(eps, var, abc, io);
+            io.SeparateText();
+
+            io.WriteLine("Finite Differences Explicit");
+            FiniteDifferencesExplicit fde = new FiniteDifferencesExplicit(var, io);
+            io.SeparateText();
+
+            io.WriteLine("Finite Differences Implicit");
+            FiniteDifferencesImplicit fdi = new FiniteDifferencesImplicit(var, io);
+        }
+
         static void TaskSwitch(int task) {
             switch ((Tasks)task) {
                 case Tasks.StraightMethods: {
@@ -307,6 +327,11 @@ namespace Lab1 {
                     NumericalIntegration();
                 } break;
 
+                case Tasks.BoundaryValueProblem: {
+                    BoundaryValue();
+                }
+                break;
+
                 default: {
                     Console.WriteLine("Wrong program");
                 } break;
@@ -322,7 +347,8 @@ namespace Lab1 {
             Console.WriteLine("3 - Nonlinear Methods (Lab3)");
             Console.WriteLine("4 - Approximation Methods (Lab4)");
 			Console.WriteLine("5 - Numerical Integration (Lab5)");
-			Console.Write("Enter number: ");
+            Console.WriteLine("6 - Boundary Value Problem(Lab6)");
+            Console.Write("Enter number: ");
 
             Console.WriteLine();
 
